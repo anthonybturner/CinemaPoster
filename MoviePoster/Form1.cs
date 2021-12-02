@@ -1,4 +1,5 @@
 ﻿using MoviePoster.PostersDB;
+using MoviePoster.Utilities;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,13 @@ namespace MoviePoster
        private Bitmap PosterImage;
        private IMDBPoster cp;
        public UInt16 PosterRefreshTime = 5000;
+       FullScreen fullScreen;
 
         public Form1()
         {
             InitializeComponent();
+            fullScreen = new FullScreen(this);
+
             cp = new IMDBPoster(this);
             cp.InitPosters();
         }
@@ -109,8 +113,7 @@ namespace MoviePoster
 
         private void SettingButtons_Click(object sender, EventArgs e)
         {
-            Form settignsForm = new Settings(this);
-            settignsForm.Show(this);
+            ShowSettings();
         }
 
         private void panel2_Paint(object sender, PaintEventArgs e)
@@ -125,6 +128,22 @@ namespace MoviePoster
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
+            ToggleMenu();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        public void ShowSettings()
+        {
+            Form settignsForm = new Settings(this);
+            settignsForm.Show(this);
+        }
+
+        public void ToggleMenu()
+        {
             if (MenuPanel.Visible)
             {
                 MenuPanel.Visible = false;
@@ -133,6 +152,16 @@ namespace MoviePoster
             {
                 MenuPanel.Visible = true;
             }
+        }
+
+        private void textBox1_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
