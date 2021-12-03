@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MoviePoster.MovieTypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,6 +45,8 @@ namespace MoviePoster
         public string Stars { get; set; }
 
         public Boolean IsLocallyLoaded { get; set; }
+
+        public MovieTechnical TechSpecs { get; set; }
 
     }
 }

@@ -126,8 +126,10 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="image.cs" />
-    <Compile Include="IMDBMovie.cs" />
-    <Compile Include="Movie.cs" />
+    <Compile Include="MovieTypes\IMDBMovie.cs" />
+    <Compile Include="MovieTypes\Movie.cs" />
+    <Compile Include="MovieTypes\MovieTechnical.cs" />
+    <Compile Include="MovieTypes\Serializer.cs" />
     <Compile Include="PostersDB\CinemaPoster.cs" />
     <Compile Include="PostersDB\IMDBPoster.cs" />
     <Compile Include="Program.cs" />

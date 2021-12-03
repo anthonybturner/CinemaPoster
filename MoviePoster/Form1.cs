@@ -4,6 +4,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Timers;
 using System.Windows.Forms;
 
@@ -60,15 +62,15 @@ namespace MoviePoster
         }
 
 
-        public void SetPosterImage(String image)
+        public void SetPosterData(IMDBMovie movie)
         {
-            if (image != null)
+            if (movie != null && movie.LocalImage != null && movie.LocalImage.Length > 0 && File.Exists(movie.LocalImage))
             {
                 if (PosterImage != null)
                 {
                     PosterImage.Dispose();
                 }
-                PosterImage = new Bitmap(image);
+                PosterImage = new Bitmap(movie.LocalImage);
                 pictureBox1.ClientSize = new Size(1080, 1920);
                 pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
 
@@ -77,6 +79,34 @@ namespace MoviePoster
                 panel1.Height = this.Height;
                 panel1.Width = this.Width;
                 pictureBox1.Image = PosterImage;
+                MovieDesc.Text =  movie.Plot;
+                if (movie.TechSpecs.aspectRatios != null)
+                {
+                    AspectRatioTextBox.Visible = true;
+
+                    foreach (var ratio in movie.TechSpecs.aspectRatios)
+                    {
+                        
+                        AspectRatioTextBox.Text += ratio + " \t | ";
+                    }
+                }
+                else
+                {
+                    AspectRatioTextBox.Text = "";
+                    AspectRatioTextBox.Visible = false;
+
+                }
+
+                if (movie.ImdbRating.Length > 0)
+                {
+                    RatingsTextBox.Visible = true;
+                    RatingsTextBox.Text = movie.ImdbRating;
+
+                }
+                else
+                {
+                    RatingsTextBox.Visible = false;
+                }
             }
         }
 
@@ -87,11 +117,11 @@ namespace MoviePoster
 
         public void GetPoster()
         {
-            String image = cp.GetRandomPoster();
-            if (image != null && image.Length > 0 ){
+            IMDBMovie movie = cp.GetRandomPoster();
+            if (movie != null){
                 BeginInvoke((Action)delegate ()
                 {
-                    SetPosterImage(image);
+                    SetPosterData(movie);
                 });
             }
         }
@@ -160,6 +190,11 @@ namespace MoviePoster
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
 
         }
