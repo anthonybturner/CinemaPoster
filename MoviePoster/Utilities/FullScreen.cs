@@ -21,11 +21,7 @@ namespace MoviePoster.Utilities
                 Toggle();
             }
 
-            if (e.KeyData == Keys.T)
-            {
-                TargetForm.ToggleMenu();
-            }
-
+            
             if (e.KeyData == Keys.S)
             {
                 TargetForm.ShowSettings();
@@ -34,10 +30,7 @@ namespace MoviePoster.Utilities
 
         private void TargetForm_T(object sender, KeyEventArgs e)
         {
-            if (e.KeyData == Keys.S)
-            {
-                TargetForm.ToggleMenu();
-            }
+           
         }
 
         public void Toggle()

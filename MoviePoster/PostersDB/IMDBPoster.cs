@@ -110,7 +110,7 @@ namespace MoviePoster.PostersDB
             foreach (IMDbApiLib.Models.NewMovieDataDetail x in data.Items)
             {
                 movie = new TitleData();
-                movie.MovieTense = "Coming Soon";
+                movie.MovieTense = "COMING SOON";
                 movie.Id = x.Id;
                 movie.Title = x.Title;
                 movie.FullTitle = x.FullTitle;
@@ -137,6 +137,7 @@ namespace MoviePoster.PostersDB
             await PopulateComingSoonMovies();
         }
 
+
         private async Task PopulateMostPopularMovies()
         {
             var apiLib = new ApiLib("k_u215r302");
@@ -148,7 +149,7 @@ namespace MoviePoster.PostersDB
                 var titleData = await apiLib.TitleAsync(x.Id);
 
                 movie = new TitleData();
-                movie.MovieTense = "In Theaters Now";
+                movie.MovieTense = "NOW SHOWING";
                 movie.Id = x.Id;
                 movie.Title = x.Title;
                 movie.FullTitle = x.FullTitle;

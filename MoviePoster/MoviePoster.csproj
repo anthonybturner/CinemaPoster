@@ -188,6 +188,30 @@
   <ItemGroup>
     <None Include="bin\Debug\pics\A_Journal_for_Jordan.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\data\Black_Widow.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\images\RTcritic-Fresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\images\2.35.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\images\2.20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\images\1.85.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\images\1.78.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\images\1.66.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\images\1.33.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

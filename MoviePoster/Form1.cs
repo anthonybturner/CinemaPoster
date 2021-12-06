@@ -112,40 +112,49 @@ namespace MoviePoster
 
                 this.Height = 1920;
                 this.Width = 1080;
-                panel1.Height = this.Height;
-                panel1.Width = this.Width;
+              //  panel1.Height = this.Height;
+              //  panel1.Width = this.Width;
                 pictureBox1.Image = PosterImage;
-                MovieDesc.Text = movie.Tagline;
+                if( movie.Tagline.Length > 0)
+                {
+                    TaglineLabel.Text = movie.Tagline;
+
+                }
+                else
+                {
+                    TaglineLabel.Text = movie.Title;
+
+                }
+
                 if (movie.TechSpecs != null && movie.TechSpecs.aspectRatios != null)
                 {
-                    AspectRatioTextBox.Visible = true;
+                    //AspectsRatioBox.Visible = true;
 
                     foreach (var ratio in movie.TechSpecs.aspectRatios)
                     {
 
-                        AspectRatioTextBox.Text += ratio + " \t | ";
+                        if (ratio == "2.35:1")
+                        {
+                            pictureBox235.Visible = true;
+                        }
+                        //AR2351.Text += ratio;
                     }
                 }
                 else
                 {
-                    AspectRatioTextBox.Text = "Aspect Ratio: 2:35.1";
-                    AspectRatioTextBox.Visible = true;
+                    pictureBox235.Visible = true;
 
                 }
                 if (movie.ImdbRating.Length > 0)
                 {
-                    RatingsTextBox.Visible = true;
-                    RatingsTextBox.Text = "IMDB Rating: " + movie.ImdbRating + "/10 (" + ((Double.Parse(movie.ImdbRating) / 10.0) * 100) + "%)";
-
+                   RatingsTextBox.Text = movie.ImdbRating + "/10";
                 }
                 else
                 {
-                    RatingsTextBox.Text = "";
-                    RatingsTextBox.Visible = false;
+                    RatingsTextBox.Text = "0/10??? ";
                 }
 
                 this.MovieTense.Text = movie.MovieTense;
-                this.MovieTitle.Text = movie.Title;
                 SetReleaseDate(movie);
                 SetRuntime(movie);
             }
@@ -155,13 +164,12 @@ namespace MoviePoster
         {
             if (movie.RuntimeMins != null && movie.RuntimeMins.Length > 0)
             {
-                this.RunTimeMinsBox.Visible = true;
-                this.RunTimeMinsBox.Text = "Runtime (Mins): " + movie.RuntimeMins;
+               // this.RunTimeMinsBox.Visible = true;
+                this.RunTimeMinsBox.Text = "Runtime: " + movie.RuntimeMins + " mins";
             }
             else
             {
-                this.RunTimeMinsBox.Text = "";
-                this.RunTimeMinsBox.Visible = false;
+                this.RunTimeMinsBox.Text = "Runtime: 90 mins ???";
             }
         }
 
@@ -169,7 +177,7 @@ namespace MoviePoster
         {
             if (movie.ReleaseDate != null && movie.ReleaseDate.Length > 0)
             {
-                this.ReleaseDateBox.Visible = true;
+                //this.AspectsRatioBox.Visible = true;
                 string[] words = movie.ReleaseDate.Split('-');
 
                 var year = Int32.Parse(words[0]);
@@ -177,12 +185,17 @@ namespace MoviePoster
                 var day = Int32.Parse(words[2]);
 
                 DateTime thisDate = new DateTime(year, month, day);
-                this.ReleaseDateBox.Text = "Release Date: " + thisDate.ToString("MMM") + " " + day + " " + year;
+                this.ReleaseDateBoxd.Text =  thisDate.ToString("MMM") + " " + day + " " + year;
             }
             else if (movie.Year != null && movie.Year.Length > 0)
             {
-                this.ReleaseDateBox.Text = "Release Year: " + movie.Year;
-                this.ReleaseDateBox.Visible = false;
+                this.ReleaseDateBoxd.Text =  movie.Year;
+                // this.AspectsRatioBox.Visible = false;
+            }
+            else
+            {
+                this.ReleaseDateBoxd.Text = "January 1 2021 ";
+
             }
         }
 
@@ -237,10 +250,6 @@ namespace MoviePoster
 
         }
 
-        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
-        {
-            ToggleMenu();
-        }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -253,18 +262,7 @@ namespace MoviePoster
             settignsForm.Show(this);
         }
 
-        public void ToggleMenu()
-        {
-            if (MenuPanel.Visible)
-            {
-                MenuPanel.Visible = false;
-            }
-            else
-            {
-                MenuPanel.Visible = true;
-            }
-        }
-
+       
         private void textBox1_TextChanged_1(object sender, EventArgs e)
         {
 
@@ -276,6 +274,11 @@ namespace MoviePoster
         }
 
         private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TaglineLabel_Click(object sender, EventArgs e)
         {
 
         }
