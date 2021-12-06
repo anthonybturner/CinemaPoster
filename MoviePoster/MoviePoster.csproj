@@ -130,6 +130,7 @@
     <Compile Include="MovieTypes\Movie.cs" />
     <Compile Include="MovieTypes\MovieTechnical.cs" />
     <Compile Include="MovieTypes\Serializer.cs" />
+    <Compile Include="MovieTypes\TitleData.cs" />
     <Compile Include="PostersDB\CinemaPoster.cs" />
     <Compile Include="PostersDB\IMDBPoster.cs" />
     <Compile Include="Program.cs" />

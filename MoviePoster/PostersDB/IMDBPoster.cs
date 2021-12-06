@@ -18,13 +18,13 @@ namespace MoviePoster.PostersDB
 {
     public class IMDBPoster
     {
-        private List<IMDBMovie> movies;
+        private List<TitleData> movies;
         private List<ComingSoonMovie> fetchedMovies;
         private Form1 mainForm;
         public IMDBPoster(Form1 form1)
         {
             mainForm = form1;
-            movies = new List<IMDBMovie>();
+            movies = new List<TitleData>();
             fetchedMovies = new List<ComingSoonMovie>();
         }
 
@@ -55,14 +55,13 @@ namespace MoviePoster.PostersDB
             {
                 if (Regex.IsMatch(filename, @"\.xml$"))
                 {
-                    IMDBMovie m;
-                    m = sr.DeSerializeObject<IMDBMovie>(String.Format(filename));
+                    TitleData m = sr.DeSerializeObject<TitleData>(String.Format(filename));
                     movies.Add(m);
                 }
             }
         }
-   
-        public IMDBMovie GetRandomPoster()
+
+        public TitleData GetRandomPoster()
         {
             if (movies.Count == 0) { return null; }
             Random r = new Random();
@@ -92,18 +91,26 @@ namespace MoviePoster.PostersDB
                     }
                 }
             }
-            movies = new List<IMDBMovie>();
+            movies = new List<TitleData>();
         }
         private async void FetchNewMovies()
         {
+            await PopulateMovies();
+            Task t = new Task(SaveMovies);
+            t.Start();
+            await t;
+        }
 
+        private async Task PopulateComingSoonMovies()
+        {
             var apiLib = new ApiLib("k_u215r302");
             var data = await apiLib.ComingSoonAsync();
-            IMDBMovie movie;
+            TitleData movie;
 
             foreach (IMDbApiLib.Models.NewMovieDataDetail x in data.Items)
             {
-                movie = new IMDBMovie();
+                movie = new TitleData();
+                movie.MovieTense = "Coming Soon";
                 movie.Id = x.Id;
                 movie.Title = x.Title;
                 movie.FullTitle = x.FullTitle;
@@ -120,41 +127,84 @@ namespace MoviePoster.PostersDB
                 movie.Genres = x.Genres;
                 movie.Directors = x.Directors;
                 movie.Stars = x.Stars;
+                movies.Add(movie);
+            }
+        }
 
+        private async Task PopulateMovies()
+        {
+            await PopulateMostPopularMovies();
+            await PopulateComingSoonMovies();
+        }
 
-                var client = new HttpClient();
-                var request = new HttpRequestMessage
-                {
-                    Method = HttpMethod.Get,
-                    RequestUri = new Uri(String.Format("https://imdb8.p.rapidapi.com/title/get-technical?tconst={0}", movie.Id)),
-                    Headers =
+        private async Task PopulateMostPopularMovies()
+        {
+            var apiLib = new ApiLib("k_u215r302");
+            var data = await apiLib.MostPopularMoviesAsync();
+
+            TitleData movie;
+            foreach (IMDbApiLib.Models.MostPopularDataDetail x in data.Items)
+            {
+                var titleData = await apiLib.TitleAsync(x.Id);
+
+                movie = new TitleData();
+                movie.MovieTense = "In Theaters Now";
+                movie.Id = x.Id;
+                movie.Title = x.Title;
+                movie.FullTitle = x.FullTitle;
+                movie.Year = x.Year;
+                movie.Image = x.Image;
+                movie.RuntimeMins = titleData.RuntimeMins;
+                movie.RuntimeStr = titleData.RuntimeStr;
+                movie.ReleaseDate = titleData.ReleaseDate;
+                movie.Tagline = titleData.Tagline;
+                movie.ContentRating = titleData.ContentRating;
+                movie.ImdbRating = x.IMDbRating;
+                movie.ImdbRatingCount = x.IMDbRatingCount;
+                movie.MetacriticRating = titleData.MetacriticRating;
+                movie.Genres = titleData.Genres;
+                movie.Directors = titleData.Directors;
+                movie.Stars = titleData.Stars;
+                movies.Add(movie);
+
+            }
+        }
+
+        private async void FetchTechSpecs(TitleData movie)
+        {
+            var client = new HttpClient();
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri(String.Format("https://imdb8.p.rapidapi.com/title/get-technical?tconst={0}", movie.Id)),
+                Headers =
                 {
                     { "x-rapidapi-key", "00e3b6603emsh590a064a3e8c494p175df9jsn6aaf9b2c458b" },
                     { "x-rapidapi-host", "imdb8.p.rapidapi.com" },
                 },
-                };
-                using (var response = await client.SendAsync(request))
+            };
+            using (var response = await client.SendAsync(request))
+            {
+                try
                 {
                     response.EnsureSuccessStatusCode();
                     var body = await response.Content.ReadAsStringAsync();
                     JToken token = JToken.Parse(body);
-                    MovieTechnical mt = token.ToObject<MovieTechnical>();
-                    movie.TechSpecs = mt;
+                    movie.TechSpecs = token.ToObject<MovieTechnical>();
+                }
+                catch (Exception ex)
+                {
                 }
                 movies.Add(movie);
             }
-
-            Task t = new Task(SaveMovies);
-            t.Start();
-            await t;
-
         }
+
         private async void SaveMovies()
         {
             Serializer ser = new Serializer();
 
             var apiLib = new ApiLib("k_u215r302");
-            foreach (IMDBMovie movie in movies)
+            foreach (TitleData movie in movies)
             {
                 string directory = System.IO.Directory.GetCurrentDirectory() + @"\data\";
                 string filename = movie.Title.Replace(": ", "_");
@@ -189,7 +239,7 @@ namespace MoviePoster.PostersDB
                         {
                             bw.Write(imageBytes);
                             saveLocation = saveLocation.Replace(".jpg", ".xml");
-                            ser.SerializeObject<IMDBMovie>(movie, saveLocation);
+                            ser.SerializeObject<TitleData>(movie, saveLocation);
                         }
                         finally
                         {

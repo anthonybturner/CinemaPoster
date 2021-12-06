@@ -11,6 +11,8 @@ namespace MoviePoster
     {
         public string Id { get; set; }
 
+        public Boolean IsInTheaters { get; set; }
+
         public string Title { get; set; }
 
         public string FullTitle { get; set; }

@@ -30,5 +30,9 @@ namespace MoviePoster.MovieTypes
 
         public string[] soundMixes { get; set; }
 
+        public static implicit operator Task<object>(MovieTechnical v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

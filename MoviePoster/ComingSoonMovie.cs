@@ -9,6 +9,6 @@ namespace MoviePoster
     public class ComingSoonMovie
     {
         public string id { get; set; }
-        public string releaseDate  { get; set; }
+        public string releaseDate { get; set; }
     }
 }

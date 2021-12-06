@@ -33,17 +33,20 @@
             this.FetchMoviesButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.MovieDesc = new System.Windows.Forms.TextBox();
-            this.AspectRatioTextBox = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.RatingsTextBox = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.MovieTense = new System.Windows.Forms.Label();
+            this.MovieDesc = new System.Windows.Forms.Label();
+            this.RunTimeMinsBox = new System.Windows.Forms.Label();
+            this.AspectRatioTextBox = new System.Windows.Forms.Label();
+            this.RatingsTextBox = new System.Windows.Forms.Label();
+            this.ReleaseDateBox = new System.Windows.Forms.Label();
+            this.MovieTitle = new System.Windows.Forms.Label();
             this.MenuPanel.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // MenuPanel
@@ -96,85 +99,36 @@
             // 
             // tableLayoutPanel1
             // 
+            this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.textBox1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.MovieDesc, 0, 3);
             this.tableLayoutPanel1.Controls.Add(this.pictureBox1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.MovieDesc, 0, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 5;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 5.919662F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 94.08034F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 9F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 58F));
+            this.tableLayoutPanel1.RowCount = 4;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 13.09771F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 86.90229F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 93F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1352, 1063);
             this.tableLayoutPanel1.TabIndex = 4;
             this.tableLayoutPanel1.UseWaitCursor = true;
             this.tableLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
             // 
-            // textBox1
-            // 
-            this.textBox1.BackColor = System.Drawing.Color.Black;
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.textBox1.Enabled = false;
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Uighur", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.ForeColor = System.Drawing.SystemColors.Info;
-            this.textBox1.Location = new System.Drawing.Point(0, 0);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(0);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(1352, 50);
-            this.textBox1.TabIndex = 2;
-            this.textBox1.Text = "Coming Soon";
-            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.textBox1.UseWaitCursor = true;
-            // 
-            // MovieDesc
-            // 
-            this.MovieDesc.BackColor = System.Drawing.Color.Black;
-            this.MovieDesc.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.MovieDesc.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.MovieDesc.Enabled = false;
-            this.MovieDesc.Font = new System.Drawing.Font("Microsoft Uighur", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MovieDesc.ForeColor = System.Drawing.SystemColors.Info;
-            this.MovieDesc.Location = new System.Drawing.Point(3, 954);
-            this.MovieDesc.Name = "MovieDesc";
-            this.MovieDesc.Size = new System.Drawing.Size(1346, 40);
-            this.MovieDesc.TabIndex = 4;
-            this.MovieDesc.Text = "Movie Description here";
-            this.MovieDesc.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.MovieDesc.UseWaitCursor = true;
-            // 
-            // AspectRatioTextBox
-            // 
-            this.AspectRatioTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.AspectRatioTextBox.BackColor = System.Drawing.Color.Black;
-            this.AspectRatioTextBox.Enabled = false;
-            this.AspectRatioTextBox.Font = new System.Drawing.Font("Microsoft Uighur", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AspectRatioTextBox.ForeColor = System.Drawing.SystemColors.Info;
-            this.AspectRatioTextBox.Location = new System.Drawing.Point(3, 3);
-            this.AspectRatioTextBox.Multiline = true;
-            this.AspectRatioTextBox.Name = "AspectRatioTextBox";
-            this.AspectRatioTextBox.Size = new System.Drawing.Size(729, 47);
-            this.AspectRatioTextBox.TabIndex = 3;
-            this.AspectRatioTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.AspectRatioTextBox.UseWaitCursor = true;
-            this.AspectRatioTextBox.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
-            // 
             // pictureBox1
             // 
-            this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 55);
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 126);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1352, 871);
+            this.pictureBox1.Size = new System.Drawing.Size(1352, 836);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -182,37 +136,109 @@
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
             // 
-            // tableLayoutPanel2
+            // tableLayoutPanel3
             // 
-            this.tableLayoutPanel2.ColumnCount = 4;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 77.44283F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.55717F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 58F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 325F));
-            this.tableLayoutPanel2.Controls.Add(this.AspectRatioTextBox, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.RatingsTextBox, 3, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 1007);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1346, 53);
-            this.tableLayoutPanel2.TabIndex = 5;
+            this.tableLayoutPanel3.ColumnCount = 3;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 39.24825F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60.75175F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 314F));
+            this.tableLayoutPanel3.Controls.Add(this.MovieTense, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.RunTimeMinsBox, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.AspectRatioTextBox, 2, 0);
+            this.tableLayoutPanel3.Controls.Add(this.RatingsTextBox, 2, 1);
+            this.tableLayoutPanel3.Controls.Add(this.ReleaseDateBox, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.MovieTitle, 1, 1);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 64F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(1346, 120);
+            this.tableLayoutPanel3.TabIndex = 6;
+            this.tableLayoutPanel3.UseWaitCursor = true;
+            // 
+            // MovieTense
+            // 
+            this.MovieTense.AutoSize = true;
+            this.MovieTense.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.MovieTense.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MovieTense.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MovieTense.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.MovieTense.Location = new System.Drawing.Point(408, 0);
+            this.MovieTense.Name = "MovieTense";
+            this.MovieTense.Size = new System.Drawing.Size(620, 56);
+            this.MovieTense.TabIndex = 5;
+            this.MovieTense.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // MovieDesc
+            // 
+            this.MovieDesc.AutoSize = true;
+            this.MovieDesc.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MovieDesc.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MovieDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.MovieDesc.Location = new System.Drawing.Point(3, 962);
+            this.MovieDesc.Name = "MovieDesc";
+            this.MovieDesc.Size = new System.Drawing.Size(1346, 93);
+            this.MovieDesc.TabIndex = 7;
+            this.MovieDesc.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // RunTimeMinsBox
+            // 
+            this.RunTimeMinsBox.AutoSize = true;
+            this.RunTimeMinsBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RunTimeMinsBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RunTimeMinsBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.RunTimeMinsBox.Location = new System.Drawing.Point(3, 56);
+            this.RunTimeMinsBox.Name = "RunTimeMinsBox";
+            this.RunTimeMinsBox.Size = new System.Drawing.Size(399, 64);
+            this.RunTimeMinsBox.TabIndex = 6;
+            // 
+            // AspectRatioTextBox
+            // 
+            this.AspectRatioTextBox.AutoSize = true;
+            this.AspectRatioTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AspectRatioTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AspectRatioTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.AspectRatioTextBox.Location = new System.Drawing.Point(1034, 0);
+            this.AspectRatioTextBox.Name = "AspectRatioTextBox";
+            this.AspectRatioTextBox.Size = new System.Drawing.Size(309, 56);
+            this.AspectRatioTextBox.TabIndex = 7;
+            this.AspectRatioTextBox.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // RatingsTextBox
             // 
-            this.RatingsTextBox.BackColor = System.Drawing.Color.Black;
-            this.RatingsTextBox.Dock = System.Windows.Forms.DockStyle.Right;
-            this.RatingsTextBox.Enabled = false;
-            this.RatingsTextBox.Font = new System.Drawing.Font("Microsoft Uighur", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RatingsTextBox.ForeColor = System.Drawing.SystemColors.Info;
-            this.RatingsTextBox.Location = new System.Drawing.Point(1023, 3);
-            this.RatingsTextBox.Multiline = true;
+            this.RatingsTextBox.AutoSize = true;
+            this.RatingsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RatingsTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RatingsTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.RatingsTextBox.Location = new System.Drawing.Point(1034, 56);
             this.RatingsTextBox.Name = "RatingsTextBox";
-            this.RatingsTextBox.Size = new System.Drawing.Size(320, 47);
-            this.RatingsTextBox.TabIndex = 4;
-            this.RatingsTextBox.Text = "Ratings";
-            this.RatingsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.RatingsTextBox.UseWaitCursor = true;
+            this.RatingsTextBox.Size = new System.Drawing.Size(309, 64);
+            this.RatingsTextBox.TabIndex = 8;
+            this.RatingsTextBox.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // ReleaseDateBox
+            // 
+            this.ReleaseDateBox.AutoSize = true;
+            this.ReleaseDateBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ReleaseDateBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ReleaseDateBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.ReleaseDateBox.Location = new System.Drawing.Point(3, 0);
+            this.ReleaseDateBox.Name = "ReleaseDateBox";
+            this.ReleaseDateBox.Size = new System.Drawing.Size(399, 56);
+            this.ReleaseDateBox.TabIndex = 9;
+            // 
+            // MovieTitle
+            // 
+            this.MovieTitle.AutoSize = true;
+            this.MovieTitle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MovieTitle.Font = new System.Drawing.Font("Microsoft Yi Baiti", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MovieTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.MovieTitle.Location = new System.Drawing.Point(408, 56);
+            this.MovieTitle.Name = "MovieTitle";
+            this.MovieTitle.Size = new System.Drawing.Size(620, 64);
+            this.MovieTitle.TabIndex = 10;
+            this.MovieTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Form1
             // 
@@ -227,11 +253,12 @@
             this.UseWaitCursor = true;
             this.MenuPanel.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -241,13 +268,16 @@
         private System.Windows.Forms.Panel MenuPanel;
         private System.Windows.Forms.Button SettingsButton;
         private System.Windows.Forms.Button FetchMoviesButton;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TextBox MovieDesc;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.TextBox RatingsTextBox;
-        private System.Windows.Forms.TextBox AspectRatioTextBox;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.Label MovieTense;
+        private System.Windows.Forms.Label RunTimeMinsBox;
+        private System.Windows.Forms.Label MovieDesc;
+        private System.Windows.Forms.Label AspectRatioTextBox;
+        private System.Windows.Forms.Label RatingsTextBox;
+        private System.Windows.Forms.Label ReleaseDateBox;
+        private System.Windows.Forms.Label MovieTitle;
     }
 }
 
