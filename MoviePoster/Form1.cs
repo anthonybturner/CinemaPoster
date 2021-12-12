@@ -1,15 +1,13 @@
 ﻿using MoviePoster.MovieTypes;
 using MoviePoster.PostersDB;
 using MoviePoster.Utilities;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
-
 
 namespace MoviePoster
 {
@@ -18,78 +16,168 @@ namespace MoviePoster
         public Int32 MaxMovies = 2;
         public Int32 NewMoviesRefreshTime { get; set; }
 
-        private System.Timers.Timer aTimer, aUpdateNewMoviesTimer;
-        private Bitmap PosterImage;
-        private IMDBPoster cp;
+        private System.Timers.Timer GetPosterTimer;
+        private Bitmap PosterImage, AspectRatioImage, ContentRatingImage, AudienceRatingImage;
+        private CinemaPoster CinemaPoster;
         public Int32 PosterRefreshTime { get; set; }
+        public System.Timers.Timer CheckNowPlayingTimer { get; private set; }
+        public bool NowPlaying { get; private set; }
+        public bool NowShowing { get; private set; }
+        public string PosterMovieTitle { get; private set; }
+        public string IP { get; set; }
+        public Dictionary<string, string> ServerIPs { get; set; }
+        public String Token { get; set; }
+
         FullScreen fullScreen;
 
         public Form1()
         {
             InitializeComponent();
             NewMoviesRefreshTime = 60;
-            PosterRefreshTime = 1;
+            PosterRefreshTime = 2;
             fullScreen = new FullScreen(this);
 
-            cp = new IMDBPoster(this);
-            cp.InitPosters();
+            NowShowing = true;
+            ServerIPs = new Dictionary<string, string>();
+            ServerIPs.Add("PlexNas", "192.168.1.249");
+            ServerIPs.Add("PlexShield", "192.168.1.171");
+            IP = ServerIPs["PlexNas"];
+            Token = "GVef81rrzoTVs1GaNFn4"; //Plex shield token
+            Token = "pUhBki4ZxSMM1eeM_Ym6"; //Plex nas token
+
+            CinemaPoster = new CinemaPoster(this);
+            _ = CinemaPoster.InitPostersAsync();
         }
 
-
-        private void StartTimer()
+        #region NowPlaying
+        private void StartCheckNowPlayingTimer()
         {
-            aTimer = new System.Timers.Timer();
-            aTimer.Elapsed += new ElapsedEventHandler(HandleMoviesEventHandler);
-            aTimer.Interval = TimeSpan.FromMinutes(PosterRefreshTime).TotalMilliseconds;
+            CheckNowPlayingTimer = new System.Timers.Timer();
+            CheckNowPlayingTimer.Elapsed += new ElapsedEventHandler(HandleCheckNowPlayEvent);
+            CheckNowPlayingTimer.Interval = 30000;//TimeSpan.FromMinutes(1).TotalMilliseconds;
+            CheckNowPlayingTimer.Enabled = true;
+            CheckNowPlayingTimer.Start();
         }
-
-        private void StartCheckNewMoviesTimer()
+        private void StopCheckNowPlayingTimer()
         {
-            if (NewMoviesRefreshTime < 1) return;
-
-            aUpdateNewMoviesTimer = new System.Timers.Timer();
-            aUpdateNewMoviesTimer.Elapsed += new ElapsedEventHandler(HandleMNewoviesEventHandler);
-            //            aUpdateNewMoviesTimer.Interval = TimeSpan.FromMinutes(NewMoviesRefreshTime).TotalMilliseconds;
-            aUpdateNewMoviesTimer.Interval = 5000;
-
-            aUpdateNewMoviesTimer.Start();
-
+            CheckNowPlayingTimer.Enabled = false;
+            CheckNowPlayingTimer.Stop();
+            CheckNowPlayingTimer.Dispose();
         }
 
-        private void StopCheckNewMoviesTimer()
+        private async void HandleCheckNowPlayEvent(object sender, ElapsedEventArgs e)
         {
-            aUpdateNewMoviesTimer.Stop();
-            aUpdateNewMoviesTimer.Enabled = false;
-            aUpdateNewMoviesTimer.Dispose();
+            await CheckNowPlaying();
         }
 
-        private void StopTimer()
+        private async Task CheckNowPlaying()
         {
-            aTimer.Enabled = false;
-            aTimer.Stop();
-            aTimer.Dispose();
-        }
+            LogWriter.WriteLog("Entering CheckNowPlaying():", "");
+            MovieTechnical mtech = await Task.Run(() => PlexApi.GetNowPlayingInfo(IP, Token));
+            if (mtech.title != null && mtech.title.Length > 0)//Plex server is playing movie
+            {
+                LogWriter.WriteLog("CheckNowPlaying(): Movie is Playing " + mtech.title, "");
 
+                if (!NowPlaying || this.lblMovieTense.Text == "Now Playing" && mtech.title != PosterMovieTitle)
+                {
+                    await Task.Run(() => StartNowPlaying(mtech));
+                }
+            }
+            else
+            {//Plex server has stopped playing movie, start posters again
+                NowPlaying = false;
+
+                if (!NowShowing)
+                {
+                    StopNowPlaying();
+                    LogWriter.WriteLog("Stopping Now Playing", "NowShowing is set to false");
+                }
+            }
+        }
+        private async Task StartNowPlaying(MovieTechnical mtech)
+        {
+            pnlDuration.Visible = true;
+            if (!NowPlaying) { StopPosters(); }
+            try
+            {
+                TitleData movie = await Task.Run(() => CinemaPoster.FetchMovie(mtech.title));
+                if (movie != null)
+                {
+                    movie.AspectRatio = Double.Parse(mtech.aspectRatio);
+                    movie.duration = mtech.duration;
+                    movie.ContentRating = mtech.contentRating;
+                    movie.AudienceRatingImage = mtech.audienceRatingImage;
+                    movie.AudienceRating = mtech.audienceRating;
+                    if (movie.Tagline == null || movie.Tagline.Length == 0)
+                    {
+                        movie.Tagline = mtech.tagline;
+                    }
+                    movie.MovieTense = "Now Playing";
+                    BeginInvoke((Action)delegate ()
+                    {
+                        SetPosterInfo(movie);
+                    });
+                    NowPlaying = true;
+                    NowShowing = false;
+                    Brightness.SetBrightness(25);
+                }
+            }
+            catch (Exception e)
+            {
+                LogWriter.WriteLog("StartNowPlaying() failed fetching movie\n" + e.Message, e.InnerException.ToString());
+            }
+        }
+        private void StopNowPlaying()
+        {
+            StartPosterTimer();
+            BeginInvoke((Action)delegate ()
+            {
+                pnlDuration.Visible = false;
+                GetInitialPoster();
+            });
+            NowShowing = true;
+            Brightness.SetBrightness(255);
+        }
+        #endregion
+
+        #region Posters
+        public void GetPoster()
+        {
+            TitleData movie = CinemaPoster.GetRandomPoster();
+            if (movie != null)
+            {
+                BeginInvoke((Action)delegate ()
+                {
+                    SetPosterInfo(movie);
+                });
+            }
+        }
+        public void GetInitialPoster()
+        {
+            TitleData movie = CinemaPoster.GetRandomPoster();
+            if (movie != null)
+            {
+                SetPosterInfo(movie);
+            }
+        }
         public void StartPosters()
         {
-            StartTimer();
-            //  StartCheckNewMoviesTimer();
-            aTimer.Enabled = true;
-            aTimer.Start();
+            StartPosterTimer();
+            StartCheckNowPlayingTimer();
+            GetInitialPoster();
         }
 
         public void StopPosters()
         {
-            StopTimer();
+            StopPosterTimer();
             // StopCheckNewMoviesTimer();
         }
 
         public void RestartPosters()
         {
             StopPosters();
-            cp.RemovePosters();
-            cp.InitPosters();
-            StartPosters();
+            CinemaPoster.RemovePosters();
+            CinemaPoster.InitPostersAsync();
         }
 
         public void RestartPosters_WithOutFetch()
@@ -97,137 +185,230 @@ namespace MoviePoster
             StopPosters();
             StartPosters();
         }
-
-        public void SetPosterData(TitleData movie)
+        private void StartPosterTimer()
         {
-            if (movie != null && movie.LocalImage != null && movie.LocalImage.Length > 0 && File.Exists(movie.LocalImage))
+            GetPosterTimer = new System.Timers.Timer();
+            GetPosterTimer.Elapsed += new ElapsedEventHandler(HandleGetPosterEvent);
+            GetPosterTimer.Interval = TimeSpan.FromMinutes(PosterRefreshTime).TotalMilliseconds;
+            GetPosterTimer.Enabled = true;
+            GetPosterTimer.Start();
+        }
+        private void StopPosterTimer()
+        {
+            GetPosterTimer.Enabled = false;
+            GetPosterTimer.Stop();
+            GetPosterTimer.Dispose();
+        }
+        #endregion
+
+        #region Form UI
+        public void SetPosterInfo(TitleData movie)
+        {
+            if (movie != null)
             {
-                if (PosterImage != null)
-                {
-                    PosterImage.Dispose();
-                }
-                PosterImage = new Bitmap(movie.LocalImage);
-                //pictureBox1.ClientSize = new Size(PosterImage.Width, PosterImage.Height);
-                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-
-                this.Height = 1920;
-                this.Width = 1080;
-              //  panel1.Height = this.Height;
-              //  panel1.Width = this.Width;
-                pictureBox1.Image = PosterImage;
-                if( movie.Tagline.Length > 0)
-                {
-                    TaglineLabel.Text = movie.Tagline;
-
-                }
-                else
-                {
-                    TaglineLabel.Text = movie.Title;
-
-                }
-
-                if (movie.TechSpecs != null && movie.TechSpecs.aspectRatios != null)
-                {
-                    //AspectsRatioBox.Visible = true;
-
-                    foreach (var ratio in movie.TechSpecs.aspectRatios)
-                    {
-
-                        if (ratio == "2.35:1")
-                        {
-                            pictureBox235.Visible = true;
-                        }
-                        //AR2351.Text += ratio;
-                    }
-                }
-                else
-                {
-                    pictureBox235.Visible = true;
-
-                }
-                if (movie.ImdbRating.Length > 0)
-                {
-                   RatingsTextBox.Text = movie.ImdbRating + "/10";
-                }
-                else
-                {
-                    RatingsTextBox.Text = "0/10??? ";
-                }
-
-                this.MovieTense.Text = movie.MovieTense;
+                this.lblMovieTense.Text = movie.MovieTense;
+                PosterMovieTitle = movie.Title;
+                SetPosterImage(movie);
+                SetTagline(movie);
+                SetPlot(movie);
+                SetDurations(movie);
+                SetAspectRatio(movie);
+                SetContentRating(movie);
                 SetReleaseDate(movie);
-                SetRuntime(movie);
+                SetAudienceRatingImage(movie);
             }
         }
 
-        private void SetRuntime(TitleData movie)
+        private void SetPlot(TitleData movie)
         {
-            if (movie.RuntimeMins != null && movie.RuntimeMins.Length > 0)
+            if (movie.Plot != null && movie.Plot.Length > 0)
             {
-               // this.RunTimeMinsBox.Visible = true;
-                this.RunTimeMinsBox.Text = "Runtime: " + movie.RuntimeMins + " mins";
+                pnlPlot.Visible = true;
+                lblPlot.Text = movie.Plot;
             }
             else
             {
-                this.RunTimeMinsBox.Text = "Runtime: 90 mins ???";
+                lblPlot.Text = "";
+                pnlPlot.Visible = false;
             }
+        }
+
+        private void SetTagline(TitleData movie)
+        {
+            if (movie.Tagline != null && movie.Tagline.Length > 0)
+            {
+                lblTagline.Text = movie.Tagline;
+            }
+            else
+            {
+                if (movie.Title != null && movie.Title.Length > 0)
+                {
+                    lblTagline.Text = movie.Title;
+                }
+                else
+                {
+                    lblTagline.Text = "";
+                }
+            }
+        }
+
+        private void SetPosterImage(TitleData movie)
+        {
+            if (movie.MovieTense != "Now Playing")
+            {
+                if (movie.Image == null || movie.Image.Length == 0)
+                {
+                    string title = movie.Title.Replace(" ", "_");
+                    string file = System.IO.Directory.GetCurrentDirectory() + String.Format(@"\data\{0}.jpg", title);
+                    if (File.Exists(file))
+                    {
+                        movie.Image = file;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+            if (PosterImage != null)
+            {
+                PosterImage.Dispose();
+            }
+            if (movie.Image != null && movie.Image.Length > 0 && File.Exists(movie.Image))
+            {
+                PosterImage = new Bitmap(movie.Image);
+                if (PosterImage != null && pboxPoster != null)
+                {
+                    pboxPoster.Image = PosterImage;
+                }
+            }
+        }
+
+        private void SetAudienceRatingImage(TitleData movie)
+        {
+            if (movie.AudienceRating != null)
+            {
+                string file = System.IO.Directory.GetCurrentDirectory() + String.Format(@"\images\{0}.png", movie.AudienceRatingImage);
+                if (!File.Exists(file))
+                {
+                    file = System.IO.Directory.GetCurrentDirectory() + String.Format(@"\images\{0}.png", "defaultcontentrating");
+                }
+
+                if (AudienceRatingImage != null)
+                {
+                    AudienceRatingImage.Dispose();
+                }
+                try
+                {
+                    AudienceRatingImage = new Bitmap(file);
+                    pboxAudienceRating.Image = AudienceRatingImage;
+                }
+                catch (FileNotFoundException e)
+                {
+                    LogWriter.WriteLog("Audience Rating image not found \n " + e.Message, e.InnerException.ToString());
+                }
+            }
+
+            if (movie.AudienceRating != null && movie.AudienceRating.Length > 0)
+            {
+                lblAudienceRating.Text = movie.AudienceRating;
+            }
+        }
+        private void SetContentRating(TitleData movie)
+        {
+            if (movie.ContentRating != null)
+            {
+                string file = System.IO.Directory.GetCurrentDirectory() + String.Format(@"\images\{0}.png", movie.ContentRating);
+                if (!File.Exists(file))
+                {
+                    file = System.IO.Directory.GetCurrentDirectory() + String.Format(@"\images\{0}.png", "defaultcontentrating");
+                }
+
+                if (ContentRatingImage != null)
+                {
+                    ContentRatingImage.Dispose();
+                }
+                try
+                {
+                    ContentRatingImage = new Bitmap(file);
+                    pboxContentRating.Image = ContentRatingImage;
+                }
+                catch (FileNotFoundException e)
+                {
+                    LogWriter.WriteLog("Content Rating image not found \n " + e.Message, e.InnerException.ToString());
+                }
+            }
+        }
+
+        private void SetDurations(TitleData movie)
+        {
+            if (movie.duration != null && movie.duration.Length > 0)
+            {
+                TimeSpan span = TimeSpan.FromMilliseconds(Int32.Parse(movie.duration)).Duration();
+                DateTime endTime = DateTime.Now.AddHours(span.Hours).AddMinutes(span.Minutes).AddSeconds(span.Seconds);
+                pnlDuration.Visible = true;
+                lblDuration.Text = span.Hours + "h " + span.Minutes + "m " + span.Seconds + "s";
+                lblEndTime.Text = String.Format("{0}:{1}:{2}", endTime.Hour, endTime.Minute, endTime.Second);
+            }
+        }
+
+        private void SetAspectRatio(TitleData movie)
+        {
+
+            string file = System.IO.Directory.GetCurrentDirectory() + String.Format(@"\images\{0}.png", movie.AspectRatio.ToString());
+            if (!File.Exists(file))
+            {
+                file = System.IO.Directory.GetCurrentDirectory() + String.Format(@"\images\{0}.png", "defaultaspect");
+            }
+            if (AspectRatioImage != null)
+            {
+                AspectRatioImage.Dispose();
+            }
+            try
+            {
+                AspectRatioImage = new Bitmap(file);
+                pboxAspectRatio.Image = AspectRatioImage;
+            }
+            catch (FileNotFoundException e)
+            {
+                LogWriter.WriteLog("Aspect Rating image not found \n " + e.Message, e.InnerException.ToString());
+            }
+
         }
 
         private void SetReleaseDate(TitleData movie)
         {
             if (movie.ReleaseDate != null && movie.ReleaseDate.Length > 0)
             {
-                //this.AspectsRatioBox.Visible = true;
                 string[] words = movie.ReleaseDate.Split('-');
-
                 var year = Int32.Parse(words[0]);
                 var month = Int32.Parse(words[1]);
                 var day = Int32.Parse(words[2]);
 
                 DateTime thisDate = new DateTime(year, month, day);
-                this.ReleaseDateBoxd.Text =  thisDate.ToString("MMM") + " " + day + " " + year;
+                lblReleaseDate.Text = thisDate.ToString("MMM") + " " + day + " " + year;
+                // this.RunTimeMinsBox.Text = thisDate.ToString("MMM") + " " + day + " " + year;
             }
             else if (movie.Year != null && movie.Year.Length > 0)
             {
-                this.ReleaseDateBoxd.Text =  movie.Year;
-                // this.AspectsRatioBox.Visible = false;
+                this.lblReleaseDate.Text = movie.Year;
             }
             else
             {
-                this.ReleaseDateBoxd.Text = "January 1 2021 ";
-
+                this.lblReleaseDate.Text = "";
             }
         }
 
-        private void HandleMoviesEventHandler(object source, ElapsedEventArgs e)
+        #endregion
+
+        #region EventHandlers
+        private void HandleGetPosterEvent(object source, ElapsedEventArgs e)
         {
             GetPoster();
         }
         private void HandleMNewoviesEventHandler(object source, ElapsedEventArgs e)
         {
             RestartPosters();
-        }
-
-        public void GetPoster()
-        {
-            TitleData movie = cp.GetRandomPoster();
-            if (movie != null)
-            {
-                BeginInvoke((Action)delegate ()
-                {
-                    SetPosterData(movie);
-                });
-            }
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void FetchMoviesButton_Click(object sender, EventArgs e)
@@ -240,21 +421,7 @@ namespace MoviePoster
             ShowSettings();
         }
 
-        private void panel2_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void MenuPanel_MouseDown(object sender, MouseEventArgs e)
-        {
-
-        }
-
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
+        #endregion
 
         public void ShowSettings()
         {
@@ -262,30 +429,5 @@ namespace MoviePoster
             settignsForm.Show(this);
         }
 
-       
-        private void textBox1_TextChanged_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void TaglineLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
     }
 }

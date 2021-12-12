@@ -21,10 +21,15 @@ namespace MoviePoster.Utilities
                 Toggle();
             }
 
-            
+
             if (e.KeyData == Keys.S)
             {
                 TargetForm.ShowSettings();
+            }
+
+            if (e.KeyData == Keys.N)
+            {
+               TargetForm.GetPoster();
             }
         }
 

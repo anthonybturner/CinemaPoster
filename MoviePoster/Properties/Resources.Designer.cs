@@ -123,16 +123,6 @@ namespace MoviePoster.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Black_Widow {
-            get {
-                object obj = ResourceManager.GetObject("Black_Widow", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap RTcritic_Fresh {
             get {
                 object obj = ResourceManager.GetObject("RTcritic-Fresh", resourceCulture);

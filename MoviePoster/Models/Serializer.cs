@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MoviePoster.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace MoviePoster.MovieTypes
             }
             catch (Exception ex)
             {
-                //Log exception here
+                LogWriter.WriteLog(ex.Message, ex.InnerException.ToString());
             }
         }
 
@@ -71,7 +72,7 @@ namespace MoviePoster.MovieTypes
             }
             catch (Exception ex)
             {
-                //Log exception here
+                LogWriter.WriteLog(ex.Message, ex.InnerException.ToString());
             }
 
             return objectOut;
