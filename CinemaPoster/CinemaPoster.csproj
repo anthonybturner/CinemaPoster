@@ -272,7 +272,6 @@
     <EmbeddedResource Include="Images\VideoCodecs\h264-alt.png" />
     <EmbeddedResource Include="Images\VideoCodecs\h264.png" />
     <EmbeddedResource Include="Images\VideoCodecs\hdmv.png" />
-    <EmbeddedResource Include="Images\VideoCodecs\hdr.jpg" />
     <EmbeddedResource Include="Images\VideoCodecs\hdr.png" />
     <EmbeddedResource Include="Images\VideoCodecs\hevc.png" />
     <EmbeddedResource Include="Images\VideoCodecs\mp4v.png" />
@@ -321,7 +320,6 @@
     <EmbeddedResource Include="Images\ContentRatings\PG-13.png" />
     <EmbeddedResource Include="Images\ContentRatings\PG.png" />
     <EmbeddedResource Include="Images\ContentRatings\R.png" />
-    <EmbeddedResource Include="Images\ContentRatings\rated-r-logo-psd-457164.png" />
     <EmbeddedResource Include="Images\ContentRatings\TV-14.png" />
     <EmbeddedResource Include="Images\ContentRatings\tv-y.png" />
     <EmbeddedResource Include="Images\ContentRatings\tv-y7.png" />

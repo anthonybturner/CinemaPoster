@@ -138,7 +138,7 @@ namespace CinemaPosterApp
                     });
                     NowPlaying = true;
                     NowShowing = false;
-                    Brightness.SetBrightness(25);
+                    Brightness.SetBrightness(100);
                 }
             }
             catch (Exception e)
@@ -263,17 +263,18 @@ namespace CinemaPosterApp
 
         private void SetHDR(IMDBMovie movie)
         {
-            SetPosterConttrol(pboxVideoCodecImage, movie.Hdr, "VideoCodecs", HdrImage, "HDR ");
+            
+           SetPosterConttrol(pboxHdrImage, movie.Hdr, "VideoCodecs", HdrImage, "HDR ");
         }
 
         private void SetVideoCodec(IMDBMovie movie)
         {
-            SetPosterConttrol(pboxHdrImage, movie.VideoCodec, "VideoCodecs", VideoCodecImage, "Video Codec ");
+            SetPosterConttrol(pboxVideoCodecImage, movie.VideoCodec, "VideoCodecs", VideoCodecImage, "Video Codec ");
         }
 
         private void SetAudioCodec(IMDBMovie movie)
         {
-            SetPosterConttrol(pboxAudioCodecImage, movie.AudioCodec, "AudioCodecs", AudioCodecImage, "Audio Codec ");
+           SetPosterConttrol(pboxAudioCodecImage, movie.AudioCodec, "AudioCodecs", AudioCodecImage, "Audio Codec ");
         }
 
         private void SetVideoFramerate(IMDBMovie movie)
@@ -283,7 +284,7 @@ namespace CinemaPosterApp
 
         private void SetVideoResolution(IMDBMovie movie)
         {
-            SetPosterConttrol(pboxVideoResolutionImage, movie.VideoResolution, "VideoResolutions", VideoResolutionImage, "Video Resolution"); 
+           SetPosterConttrol(pboxVideoResolutionImage, movie.VideoResolution, "VideoResolutions", VideoResolutionImage, "Video Resolution"); 
         }
         private void SetAudienceRatingImage(IMDBMovie movie)
         {
@@ -317,7 +318,7 @@ namespace CinemaPosterApp
 
         private void SetAspectRatio(IMDBMovie movie)
         {
-            SetPosterConttrol(pboxAspectRatio, movie.AspectRatio, "AspectRatios", AspectRatioImage, "Aspect ratio");
+           SetPosterConttrol(pboxAspectRatio, movie.AspectRatio, "AspectRatios", AspectRatioImage, "Aspect ratio");
         }
 
         private void SetReleaseDate(IMDBMovie movie)
@@ -374,6 +375,11 @@ namespace CinemaPosterApp
                     }
                 }
             }
+
+        }
+
+        private void pboxVideoResolutionImage_Click(object sender, EventArgs e)
+        {
 
         }
 

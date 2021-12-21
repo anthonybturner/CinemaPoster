@@ -69,7 +69,7 @@ namespace CinemaPosterApp
                                             mtech.bitrate = reader.Value;
                                             break;
                                         case "videoResolution":
-                                            mtech.videoResolution = reader.Value;
+                                            mtech.videoResolution = reader.Value.Replace("p", "");
                                             break;
                                         case "videoFrameRate":
                                             mtech.videoFrameRate = reader.Value;
