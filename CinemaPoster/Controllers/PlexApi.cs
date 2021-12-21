@@ -121,7 +121,7 @@ namespace CinemaPosterApp
             }
             catch (Exception e)
             {
-                LogWriter.WriteLog(e.Message, e.ToString());
+                Logger.WriteLog(e.Message, e.ToString());
             }
             return mtech;
         }

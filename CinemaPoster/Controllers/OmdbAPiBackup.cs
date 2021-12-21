@@ -73,7 +73,7 @@ namespace CinemaPoster.Controllers
                 }
                 catch (Exception ex)
                 {
-                    LogWriter.WriteLog(ex.Message, ex.InnerException.ToString());
+                    Logger.WriteLog(ex.Message, ex.InnerException.ToString());
                 }
             }
             return movie;
@@ -174,7 +174,7 @@ namespace CinemaPoster.Controllers
                         }
                         catch (Exception e)
                         {
-                            LogWriter.WriteLog(e.Message, e.InnerException.ToString());
+                            Logger.WriteLog(e.Message, e.InnerException.ToString());
                         }
                         finally
                         {
@@ -191,7 +191,7 @@ namespace CinemaPoster.Controllers
                 }
                 catch (Exception ex)
                 {
-                    LogWriter.WriteLog(ex.Message, ex.ToString());
+                    Logger.WriteLog(ex.Message, ex.ToString());
 
                 }
                 finally
@@ -289,7 +289,7 @@ namespace CinemaPoster.Controllers
                     catch (Exception e)
                     {
                         IsInvalidFile = true;
-                        LogWriter.WriteLog(e.Message, "Failed Getting poster from OmdbApi");
+                        Logger.WriteLog(e.Message, "Failed Getting poster from OmdbApi");
                     }
                     finally
                     {
@@ -300,7 +300,7 @@ namespace CinemaPoster.Controllers
                     }
                     if (IsInvalidFile)
                     {
-                        LogWriter.WriteLog("PosterAsync", "Getting poster from IMDBApi");
+                        Logger.WriteLog("PosterAsync", "Getting poster from IMDBApi");
 
                         IMDbApiLib.Models.SearchData data = await apiLib.SearchMovieAsync(movie.FullTitle);
                         if (data != null)

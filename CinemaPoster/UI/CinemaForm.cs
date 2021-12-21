@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
@@ -90,13 +91,13 @@ namespace CinemaPosterApp
 
         private async Task CheckNowPlaying()
         {
-            LogWriter.WriteLog("Entering CheckNowPlaying():", "");
+            Logger.WriteLog("Entering CheckNowPlaying():", "");
             MovieTechnical mtech = await Task.Run(() => PlexApi.GetNowPlayingInfo(appPlexURL, NowPlaying));
             if (!mtech.IsPlaying)
             {
                 if (mtech.title != null && mtech.title.Length > 0)//Plex server is playing movie
                 {
-                    LogWriter.WriteLog("CheckNowPlaying(): Movie is Playing " + mtech.title, "");
+                    Logger.WriteLog("CheckNowPlaying(): Movie is Playing " + mtech.title, "");
 
                     if (!NowPlaying || this.lblMovieTense.Text == "Now Playing" && mtech.title != PosterMovieTitle)
                     {
@@ -110,7 +111,7 @@ namespace CinemaPosterApp
                     if (!NowShowing)
                     {
                         StopNowPlaying();
-                        LogWriter.WriteLog("Stopping Now Playing", "NowShowing is set to false");
+                        Logger.WriteLog("Stopping Now Playing", "NowShowing is set to false");
                     }
                 }
             }
@@ -142,7 +143,7 @@ namespace CinemaPosterApp
             }
             catch (Exception e)
             {
-                LogWriter.WriteLog("StartNowPlaying() failed fetching movie\n" + e.Message, e.ToString());
+                Logger.WriteLog("StartNowPlaying() failed fetching movie\n" + e.Message, e.ToString());
             }
         }
         private void StopNowPlaying()
@@ -210,13 +211,13 @@ namespace CinemaPosterApp
         private void StartPosterTimer()
         {
             GetPosterTimer = new System.Timers.Timer();
-            GetPosterTimer.Elapsed += new ElapsedEventHandler(HandleGetPosterEvent);
+            GetPosterTimer.Elapsed += new ElapsedEventHandler(HandleGetPoster);
             GetPosterTimer.Interval = TimeSpan.FromMinutes(PosterRefreshTime).TotalMilliseconds;
             GetPosterTimer.Enabled = true;
             GetPosterTimer.Start();
 
             MarqueePlotTimer = new System.Timers.Timer();
-            MarqueePlotTimer.Elapsed += new ElapsedEventHandler(MarqueePlot_Tick);
+            MarqueePlotTimer.Elapsed += new ElapsedEventHandler(HandleMarqueePlot_Tick);
             MarqueePlotTimer.Interval = 800; ;
             MarqueePlotTimer.Enabled = true;
         }
@@ -257,23 +258,22 @@ namespace CinemaPosterApp
                 SetAudioCodec(movie);
                 SetVideoCodec(movie);
                 SetHDR(movie);
-
             }
         }
 
         private void SetHDR(IMDBMovie movie)
         {
-            SetPosterConttrol(pboxVideoCodecImage, movie.Hdr, "videoCodecs", HdrImage, "HDR ");
+            SetPosterConttrol(pboxVideoCodecImage, movie.Hdr, "VideoCodecs", HdrImage, "HDR ");
         }
 
         private void SetVideoCodec(IMDBMovie movie)
         {
-            SetPosterConttrol(pboxHdrImage, movie.VideoCodec, "videoCodecs", VideoCodecImage, "Video Codec ");
+            SetPosterConttrol(pboxHdrImage, movie.VideoCodec, "VideoCodecs", VideoCodecImage, "Video Codec ");
         }
 
         private void SetAudioCodec(IMDBMovie movie)
         {
-            SetPosterConttrol(pboxAudioCodecImage, movie.AudioCodec, "audio", AudioCodecImage, "Audio Codec ");
+            SetPosterConttrol(pboxAudioCodecImage, movie.AudioCodec, "AudioCodecs", AudioCodecImage, "Audio Codec ");
         }
 
         private void SetVideoFramerate(IMDBMovie movie)
@@ -283,7 +283,7 @@ namespace CinemaPosterApp
 
         private void SetVideoResolution(IMDBMovie movie)
         {
-            SetPosterConttrol(pboxVideoResolutionImage, movie.VideoResolution, "video", VideoResolutionImage, "Video Resolution"); 
+            SetPosterConttrol(pboxVideoResolutionImage, movie.VideoResolution, "VideoResolutions", VideoResolutionImage, "Video Resolution"); 
         }
         private void SetAudienceRatingImage(IMDBMovie movie)
         {
@@ -294,13 +294,13 @@ namespace CinemaPosterApp
             }
             else {
                 lblIMDBRating.Text = ((Double.Parse(movie.imdbRating) / 10.0) * 100).ToString() + "%";
-                SetPosterConttrol(pboxIMDBRating, "defaultEmpty", "audienceRating", AudienceRatingImage, "imdbRating");
+                SetPosterConttrol(pboxIMDBRating, "defaultEmpty", "AudienceRating", AudienceRatingImage, "imdbRating");
             }
         }
 
         private void SetContentRating(IMDBMovie movie)
         {
-            SetPosterConttrol(pboxContentRating, movie.Rated, "contentRating", ContentRatingImage, "Content Rating");
+            SetPosterConttrol(pboxContentRating, movie.Rated, "ContentRatings", ContentRatingImage, "Content Rating");
         }
 
         private void SetDurations(IMDBMovie movie)
@@ -317,7 +317,7 @@ namespace CinemaPosterApp
 
         private void SetAspectRatio(IMDBMovie movie)
         {
-            SetPosterConttrol(pboxAspectRatio, movie.AspectRatio, "aspects", AspectRatioImage, "Aspect ratio");
+            SetPosterConttrol(pboxAspectRatio, movie.AspectRatio, "AspectRatios", AspectRatioImage, "Aspect ratio");
         }
 
         private void SetReleaseDate(IMDBMovie movie)
@@ -352,8 +352,11 @@ namespace CinemaPosterApp
             }
             else
             {
-                string file = System.IO.Directory.GetCurrentDirectory() + String.Format(@"\images\{0}\{1}.png", dir, ctrlValue);
-                if (File.Exists(file))
+                //CinemaPoster.Images.contentRatings.PG-13.png
+                //string file = System.IO.Directory.GetCurrentDirectory() + String.Format(@"\images\{0}\{1}.png", dir, ctrlValue);
+                Stream file = Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("CinemaPoster.Images.{0}.{1}.png", dir, ctrlValue));
+
+                if (file != null)
                 {
                     if (bImage != null)
                     {
@@ -367,7 +370,7 @@ namespace CinemaPosterApp
                     }
                     catch (FileNotFoundException e)
                     {
-                        LogWriter.WriteLog(errorName + " image not found \n " + e.Message, e.ToString());
+                        Logger.WriteLog(errorName + " image not found \n " + e.Message, e.ToString());
                     }
                 }
             }
@@ -393,30 +396,26 @@ namespace CinemaPosterApp
             }
         }
 
-        private void MarqueePlot_Tick(object sender, EventArgs e)
+        private void HandleMarqueePlot_Tick(object sender, EventArgs e)
         {
-            
-                BeginInvoke((Action)delegate (){
-                    if (lblPlot.Text.Length > 197)
+            BeginInvoke((Action)delegate (){
+                if (lblPlot.Text.Length > 197)
+                {
+                    if (YPos <= -this.pnlPlot.Height -50)
                     {
-                        if (YPos <= -this.pnlPlot.Height -50)
-                        {
-                            this.lblPlot.Location = new System.Drawing.Point(xPos, 0);
-                            YPos = 0;
-                        }
-                        else{
-                            this.lblPlot.Location = new System.Drawing.Point(xPos, YPos);
-                            YPos -= 10; 
-
-                        }
+                        this.lblPlot.Location = new System.Drawing.Point(xPos, 0);
+                        YPos = 0;
                     }
-                    else
-                    {
-                        this.lblPlot.Location = new System.Drawing.Point(0, 0);
+                    else{
+                        this.lblPlot.Location = new System.Drawing.Point(xPos, YPos);
+                        YPos -= 10; 
                     }
-                });
-                
-            
+                }
+                else
+                {
+                    this.lblPlot.Location = new System.Drawing.Point(0, 0);
+                }
+            });            
         }
 
         private void SetTagline(IMDBMovie movie)
@@ -469,7 +468,7 @@ namespace CinemaPosterApp
         #endregion
 
         #region EventHandlers
-        private void HandleGetPosterEvent(object source, ElapsedEventArgs e)
+        private void HandleGetPoster(object source, ElapsedEventArgs e)
         {
             GetPoster();
         }

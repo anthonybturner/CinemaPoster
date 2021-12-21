@@ -36,7 +36,7 @@ namespace CinemaPosterApp.MovieTypes
             }
             catch (Exception ex)
             {
-                LogWriter.WriteLog(ex.Message, ex.InnerException.ToString());
+                Logger.WriteLog(ex.Message, ex.InnerException.ToString());
             }
         }
 
@@ -72,7 +72,7 @@ namespace CinemaPosterApp.MovieTypes
             }
             catch (Exception ex)
             {
-                LogWriter.WriteLog(ex.Message, ex.InnerException.ToString());
+                Logger.WriteLog(ex.Message, ex.InnerException.ToString());
             }
 
             return objectOut;

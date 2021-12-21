@@ -79,7 +79,7 @@ namespace CinemaPoster.Controllers
                 }
                 catch (Exception ex)
                 {
-                    LogWriter.WriteLog(ex.Message, ex.InnerException.ToString());
+                    Logger.WriteLog(ex.Message, ex.InnerException.ToString());
                 }
             }
             return movie;
@@ -180,7 +180,7 @@ namespace CinemaPoster.Controllers
                         }
                         catch (Exception e)
                         {
-                            LogWriter.WriteLog(e.Message, e.ToString());
+                            Logger.WriteLog(e.Message, e.ToString());
                         }
                         finally
                         {
@@ -197,7 +197,7 @@ namespace CinemaPoster.Controllers
                 }
                 catch (Exception ex)
                 {
-                    LogWriter.WriteLog(ex.Message, ex.ToString());
+                    Logger.WriteLog(ex.Message, ex.ToString());
 
                 }
                 finally

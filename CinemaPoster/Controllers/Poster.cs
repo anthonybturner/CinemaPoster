@@ -113,7 +113,7 @@ namespace CinemaPosterApp.PostersDB
                     }
                     catch (IOException e) when (i <= NumberOfRetries)
                     {
-                        LogWriter.WriteLog(e.Message, e.ToString());
+                        Logger.WriteLog(e.Message, e.ToString());
                         Thread.Sleep(DelayOnRetry);
                     }
                 }

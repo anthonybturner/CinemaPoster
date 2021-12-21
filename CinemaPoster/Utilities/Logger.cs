@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace CinemaPosterApp.Utilities
 {
-    class LogWriter {
+    class Logger {
 
         private static string LOG_FILE = "CinemaPoster.log";
         private static string LOG_DIR = System.IO.Directory.GetCurrentDirectory() + @"\logs\";
 
-        public LogWriter()
+        public Logger()
         {
 
         }

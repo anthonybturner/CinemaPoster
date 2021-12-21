@@ -356,7 +356,6 @@
             // pboxAspectRatio
             // 
             this.pboxAspectRatio.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pboxAspectRatio.Image = global::CinemaPoster.Properties.Resources._2_35;
             this.pboxAspectRatio.Location = new System.Drawing.Point(3, 3);
             this.pboxAspectRatio.Name = "pboxAspectRatio";
             this.pboxAspectRatio.Size = new System.Drawing.Size(90, 85);

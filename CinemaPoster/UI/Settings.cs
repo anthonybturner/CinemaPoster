@@ -17,14 +17,15 @@ namespace CinemaPosterApp
         {
             InitializeComponent();
             mainForm = f;
-            numericUpDown1.Value = mainForm.MAX_MOVIES;
+
+            numericUpDown1.Value = CinemaForm.MAX_MOVIES;
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
             if (numericUpDown1.Value > 0)
             {
-                mainForm.MAX_MOVIES = ((int)numericUpDown1.Value);
+              //  CinemaForm.MAX_MOVIES = ((int)numericUpDown1.Value);
                 mainForm.RestartPosters();
             }
             this.Close();
