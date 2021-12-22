@@ -95,12 +95,13 @@
             this.tblTop.Controls.Add(this.panel1, 0, 1);
             this.tblTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.tblTop.Location = new System.Drawing.Point(0, 0);
+            this.tblTop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tblTop.Name = "tblTop";
             this.tblTop.RowCount = 3;
             this.tblTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tblTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 147F));
-            this.tblTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 49F));
-            this.tblTop.Size = new System.Drawing.Size(969, 253);
+            this.tblTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 181F));
+            this.tblTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tblTop.Size = new System.Drawing.Size(1292, 311);
             this.tblTop.TabIndex = 2;
             this.tblTop.UseWaitCursor = true;
             // 
@@ -109,9 +110,10 @@
             this.pictureBox5.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox5.BackgroundImage")));
             this.pictureBox5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
-            this.pictureBox5.Location = new System.Drawing.Point(3, 3);
+            this.pictureBox5.Location = new System.Drawing.Point(4, 4);
+            this.pictureBox5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(963, 51);
+            this.pictureBox5.Size = new System.Drawing.Size(1284, 62);
             this.pictureBox5.TabIndex = 0;
             this.pictureBox5.TabStop = false;
             this.pictureBox5.UseWaitCursor = true;
@@ -121,9 +123,10 @@
             this.pictureBox6.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox6.BackgroundImage")));
             this.pictureBox6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
-            this.pictureBox6.Location = new System.Drawing.Point(3, 207);
+            this.pictureBox6.Location = new System.Drawing.Point(4, 255);
+            this.pictureBox6.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(963, 43);
+            this.pictureBox6.Size = new System.Drawing.Size(1284, 52);
             this.pictureBox6.TabIndex = 1;
             this.pictureBox6.TabStop = false;
             this.pictureBox6.UseWaitCursor = true;
@@ -133,9 +136,10 @@
             this.panel1.Controls.Add(this.pnlDuration);
             this.panel1.Controls.Add(this.lblMovieTense);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 60);
+            this.panel1.Location = new System.Drawing.Point(4, 74);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(963, 141);
+            this.panel1.Size = new System.Drawing.Size(1284, 173);
             this.panel1.TabIndex = 2;
             this.panel1.UseWaitCursor = true;
             // 
@@ -147,10 +151,11 @@
             this.pnlDuration.Controls.Add(this.label1);
             this.pnlDuration.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlDuration.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pnlDuration.Location = new System.Drawing.Point(0, 112);
+            this.pnlDuration.Location = new System.Drawing.Point(0, 137);
+            this.pnlDuration.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pnlDuration.Name = "pnlDuration";
-            this.pnlDuration.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.pnlDuration.Size = new System.Drawing.Size(963, 29);
+            this.pnlDuration.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pnlDuration.Size = new System.Drawing.Size(1284, 36);
             this.pnlDuration.TabIndex = 5;
             this.pnlDuration.UseWaitCursor = true;
             this.pnlDuration.Visible = false;
@@ -162,9 +167,10 @@
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Yellow;
             this.label2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label2.Location = new System.Drawing.Point(713, 2);
+            this.label2.Location = new System.Drawing.Point(970, 2);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(137, 31);
+            this.label2.Size = new System.Drawing.Size(172, 39);
             this.label2.TabIndex = 9;
             this.label2.Text = "End Time:";
             this.label2.UseWaitCursor = true;
@@ -176,9 +182,10 @@
             this.lblEndTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEndTime.ForeColor = System.Drawing.Color.Yellow;
             this.lblEndTime.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblEndTime.Location = new System.Drawing.Point(850, 2);
+            this.lblEndTime.Location = new System.Drawing.Point(1142, 2);
+            this.lblEndTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblEndTime.Name = "lblEndTime";
-            this.lblEndTime.Size = new System.Drawing.Size(111, 31);
+            this.lblEndTime.Size = new System.Drawing.Size(139, 39);
             this.lblEndTime.TabIndex = 8;
             this.lblEndTime.Text = "8:00 am";
             this.lblEndTime.UseWaitCursor = true;
@@ -190,9 +197,10 @@
             this.lblDuration.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDuration.ForeColor = System.Drawing.Color.Yellow;
             this.lblDuration.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblDuration.Location = new System.Drawing.Point(127, 2);
+            this.lblDuration.Location = new System.Drawing.Point(158, 2);
+            this.lblDuration.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDuration.Name = "lblDuration";
-            this.lblDuration.Size = new System.Drawing.Size(154, 31);
+            this.lblDuration.Size = new System.Drawing.Size(194, 39);
             this.lblDuration.TabIndex = 7;
             this.lblDuration.Text = "1h 20m 00s";
             this.lblDuration.UseWaitCursor = true;
@@ -204,9 +212,10 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Yellow;
             this.label1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label1.Location = new System.Drawing.Point(2, 2);
+            this.label1.Location = new System.Drawing.Point(3, 2);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(125, 31);
+            this.label1.Size = new System.Drawing.Size(155, 39);
             this.label1.TabIndex = 6;
             this.label1.Text = "Duration:";
             this.label1.UseWaitCursor = true;
@@ -220,8 +229,9 @@
             this.lblMovieTense.ForeColor = System.Drawing.Color.Yellow;
             this.lblMovieTense.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.lblMovieTense.Location = new System.Drawing.Point(0, 0);
+            this.lblMovieTense.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMovieTense.Name = "lblMovieTense";
-            this.lblMovieTense.Size = new System.Drawing.Size(963, 109);
+            this.lblMovieTense.Size = new System.Drawing.Size(1284, 134);
             this.lblMovieTense.TabIndex = 4;
             this.lblMovieTense.Text = "Theaters Now";
             this.lblMovieTense.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -231,9 +241,10 @@
             // 
             this.pboxPoster.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pboxPoster.Image = ((System.Drawing.Image)(resources.GetObject("pboxPoster.Image")));
-            this.pboxPoster.Location = new System.Drawing.Point(0, 253);
+            this.pboxPoster.Location = new System.Drawing.Point(0, 311);
+            this.pboxPoster.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pboxPoster.Name = "pboxPoster";
-            this.pboxPoster.Size = new System.Drawing.Size(969, 121);
+            this.pboxPoster.Size = new System.Drawing.Size(1292, 150);
             this.pboxPoster.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pboxPoster.TabIndex = 3;
             this.pboxPoster.TabStop = false;
@@ -244,9 +255,10 @@
             this.pnlBottom.BackColor = System.Drawing.Color.Gray;
             this.pnlBottom.Controls.Add(this.tblInfo);
             this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlBottom.Location = new System.Drawing.Point(0, 374);
+            this.pnlBottom.Location = new System.Drawing.Point(0, 461);
+            this.pnlBottom.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pnlBottom.Name = "pnlBottom";
-            this.pnlBottom.Size = new System.Drawing.Size(969, 547);
+            this.pnlBottom.Size = new System.Drawing.Size(1292, 673);
             this.pnlBottom.TabIndex = 1;
             this.pnlBottom.UseWaitCursor = true;
             // 
@@ -260,12 +272,13 @@
             this.tblInfo.Controls.Add(this.tableLayoutPanel5, 0, 1);
             this.tblInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tblInfo.Location = new System.Drawing.Point(0, 0);
+            this.tblInfo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tblInfo.Name = "tblInfo";
             this.tblInfo.RowCount = 3;
             this.tblInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11.81263F));
             this.tblInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 88.18737F));
-            this.tblInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 55F));
-            this.tblInfo.Size = new System.Drawing.Size(969, 547);
+            this.tblInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 68F));
+            this.tblInfo.Size = new System.Drawing.Size(1292, 673);
             this.tblInfo.TabIndex = 0;
             this.tblInfo.UseWaitCursor = true;
             // 
@@ -274,9 +287,10 @@
             this.pictureBox8.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox8.BackgroundImage")));
             this.pictureBox8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox8.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox8.Image")));
-            this.pictureBox8.Location = new System.Drawing.Point(3, 3);
+            this.pictureBox8.Location = new System.Drawing.Point(4, 4);
+            this.pictureBox8.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pictureBox8.Name = "pictureBox8";
-            this.pictureBox8.Size = new System.Drawing.Size(963, 52);
+            this.pictureBox8.Size = new System.Drawing.Size(1284, 63);
             this.pictureBox8.TabIndex = 0;
             this.pictureBox8.TabStop = false;
             this.pictureBox8.UseWaitCursor = true;
@@ -286,9 +300,10 @@
             this.pictureBox9.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox9.BackgroundImage")));
             this.pictureBox9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox9.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox9.Image")));
-            this.pictureBox9.Location = new System.Drawing.Point(3, 494);
+            this.pictureBox9.Location = new System.Drawing.Point(4, 608);
+            this.pictureBox9.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pictureBox9.Name = "pictureBox9";
-            this.pictureBox9.Size = new System.Drawing.Size(963, 50);
+            this.pictureBox9.Size = new System.Drawing.Size(1284, 61);
             this.pictureBox9.TabIndex = 1;
             this.pictureBox9.TabStop = false;
             this.pictureBox9.UseWaitCursor = true;
@@ -303,14 +318,15 @@
             this.tableLayoutPanel5.Controls.Add(this.lblMovieTitle, 0, 0);
             this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel6, 0, 3);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 61);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(4, 75);
+            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 4;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 49F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.98258F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 85.01742F));
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 66F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(963, 427);
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 81F));
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(1284, 525);
             this.tableLayoutPanel5.TabIndex = 2;
             this.tableLayoutPanel5.UseWaitCursor = true;
             // 
@@ -319,9 +335,10 @@
             this.pnlPlot.AutoSize = true;
             this.pnlPlot.Controls.Add(this.lblPlot);
             this.pnlPlot.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlPlot.Location = new System.Drawing.Point(3, 91);
+            this.pnlPlot.Location = new System.Drawing.Point(4, 112);
+            this.pnlPlot.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pnlPlot.Name = "pnlPlot";
-            this.pnlPlot.Size = new System.Drawing.Size(957, 266);
+            this.pnlPlot.Size = new System.Drawing.Size(1276, 327);
             this.pnlPlot.TabIndex = 3;
             this.pnlPlot.UseWaitCursor = true;
             // 
@@ -330,9 +347,10 @@
             this.lblPlot.BackColor = System.Drawing.Color.Black;
             this.lblPlot.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPlot.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblPlot.Location = new System.Drawing.Point(-6, 0);
+            this.lblPlot.Location = new System.Drawing.Point(-8, 0);
+            this.lblPlot.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPlot.Name = "lblPlot";
-            this.lblPlot.Size = new System.Drawing.Size(1080, 335);
+            this.lblPlot.Size = new System.Drawing.Size(1440, 412);
             this.lblPlot.TabIndex = 2;
             this.lblPlot.Text = resources.GetString("lblPlot.Text");
             this.lblPlot.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -342,9 +360,10 @@
             // 
             this.pnlTagline.Controls.Add(this.lblTagline);
             this.pnlTagline.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlTagline.Location = new System.Drawing.Point(3, 43);
+            this.pnlTagline.Location = new System.Drawing.Point(4, 53);
+            this.pnlTagline.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pnlTagline.Name = "pnlTagline";
-            this.pnlTagline.Size = new System.Drawing.Size(957, 42);
+            this.pnlTagline.Size = new System.Drawing.Size(1276, 51);
             this.pnlTagline.TabIndex = 4;
             this.pnlTagline.UseWaitCursor = true;
             // 
@@ -355,8 +374,9 @@
             this.lblTagline.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTagline.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.lblTagline.Location = new System.Drawing.Point(0, 0);
+            this.lblTagline.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTagline.Name = "lblTagline";
-            this.lblTagline.Size = new System.Drawing.Size(957, 42);
+            this.lblTagline.Size = new System.Drawing.Size(1276, 51);
             this.lblTagline.TabIndex = 1;
             this.lblTagline.Text = "Tagline";
             this.lblTagline.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -368,9 +388,10 @@
             this.lblMovieTitle.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblMovieTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMovieTitle.ForeColor = System.Drawing.Color.Yellow;
-            this.lblMovieTitle.Location = new System.Drawing.Point(3, 0);
+            this.lblMovieTitle.Location = new System.Drawing.Point(4, 0);
+            this.lblMovieTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMovieTitle.Name = "lblMovieTitle";
-            this.lblMovieTitle.Size = new System.Drawing.Size(957, 40);
+            this.lblMovieTitle.Size = new System.Drawing.Size(1276, 49);
             this.lblMovieTitle.TabIndex = 5;
             this.lblMovieTitle.Text = "Title";
             this.lblMovieTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -379,14 +400,14 @@
             // tableLayoutPanel6
             // 
             this.tableLayoutPanel6.ColumnCount = 8;
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 37.80488F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 62.19512F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 94F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 95F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 95F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 57F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 94F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 344F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 36.17021F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 63.82979F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 145F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 165F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 282F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 84F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 161F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 17F));
             this.tableLayoutPanel6.Controls.Add(this.pboxHdrImage, 0, 0);
             this.tableLayoutPanel6.Controls.Add(this.pboxVideoResolutionImage, 0, 0);
             this.tableLayoutPanel6.Controls.Add(this.pboxContentRating, 0, 0);
@@ -395,12 +416,12 @@
             this.tableLayoutPanel6.Controls.Add(this.panel3, 5, 0);
             this.tableLayoutPanel6.Controls.Add(this.pboxAspectRatio, 6, 0);
             this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(2, 362);
-            this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 445);
+            this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 1;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(959, 63);
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(1278, 78);
             this.tableLayoutPanel6.TabIndex = 6;
             this.tableLayoutPanel6.UseWaitCursor = true;
             // 
@@ -408,11 +429,11 @@
             // 
             this.pboxHdrImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pboxHdrImage.Image = ((System.Drawing.Image)(resources.GetObject("pboxHdrImage.Image")));
-            this.pboxHdrImage.Location = new System.Drawing.Point(181, 2);
-            this.pboxHdrImage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pboxHdrImage.Location = new System.Drawing.Point(426, 2);
+            this.pboxHdrImage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pboxHdrImage.Name = "pboxHdrImage";
-            this.pboxHdrImage.Size = new System.Drawing.Size(90, 59);
-            this.pboxHdrImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pboxHdrImage.Size = new System.Drawing.Size(139, 74);
+            this.pboxHdrImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pboxHdrImage.TabIndex = 7;
             this.pboxHdrImage.TabStop = false;
             this.pboxHdrImage.UseWaitCursor = true;
@@ -421,11 +442,11 @@
             // 
             this.pboxVideoResolutionImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pboxVideoResolutionImage.Image = ((System.Drawing.Image)(resources.GetObject("pboxVideoResolutionImage.Image")));
-            this.pboxVideoResolutionImage.Location = new System.Drawing.Point(70, 2);
-            this.pboxVideoResolutionImage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pboxVideoResolutionImage.Location = new System.Drawing.Point(156, 2);
+            this.pboxVideoResolutionImage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pboxVideoResolutionImage.Name = "pboxVideoResolutionImage";
-            this.pboxVideoResolutionImage.Size = new System.Drawing.Size(107, 59);
-            this.pboxVideoResolutionImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pboxVideoResolutionImage.Size = new System.Drawing.Size(264, 74);
+            this.pboxVideoResolutionImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pboxVideoResolutionImage.TabIndex = 6;
             this.pboxVideoResolutionImage.TabStop = false;
             this.pboxVideoResolutionImage.UseWaitCursor = true;
@@ -434,11 +455,11 @@
             // 
             this.pboxContentRating.Dock = System.Windows.Forms.DockStyle.Left;
             this.pboxContentRating.Image = ((System.Drawing.Image)(resources.GetObject("pboxContentRating.Image")));
-            this.pboxContentRating.Location = new System.Drawing.Point(2, 2);
-            this.pboxContentRating.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pboxContentRating.Location = new System.Drawing.Point(3, 2);
+            this.pboxContentRating.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pboxContentRating.Name = "pboxContentRating";
-            this.pboxContentRating.Size = new System.Drawing.Size(64, 59);
-            this.pboxContentRating.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pboxContentRating.Size = new System.Drawing.Size(147, 74);
+            this.pboxContentRating.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pboxContentRating.TabIndex = 5;
             this.pboxContentRating.TabStop = false;
             this.pboxContentRating.UseWaitCursor = true;
@@ -447,10 +468,10 @@
             // 
             this.panel2.Controls.Add(this.pboxAudioCodecImage);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(275, 2);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel2.Location = new System.Drawing.Point(571, 2);
+            this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(91, 59);
+            this.panel2.Size = new System.Drawing.Size(159, 74);
             this.panel2.TabIndex = 4;
             this.panel2.UseWaitCursor = true;
             // 
@@ -459,10 +480,10 @@
             this.pboxAudioCodecImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pboxAudioCodecImage.Image = ((System.Drawing.Image)(resources.GetObject("pboxAudioCodecImage.Image")));
             this.pboxAudioCodecImage.Location = new System.Drawing.Point(0, 0);
-            this.pboxAudioCodecImage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pboxAudioCodecImage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pboxAudioCodecImage.Name = "pboxAudioCodecImage";
-            this.pboxAudioCodecImage.Size = new System.Drawing.Size(91, 59);
-            this.pboxAudioCodecImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pboxAudioCodecImage.Size = new System.Drawing.Size(159, 74);
+            this.pboxAudioCodecImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pboxAudioCodecImage.TabIndex = 8;
             this.pboxAudioCodecImage.TabStop = false;
             this.pboxAudioCodecImage.UseWaitCursor = true;
@@ -471,11 +492,11 @@
             // 
             this.pboxVideoCodecImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pboxVideoCodecImage.Image = ((System.Drawing.Image)(resources.GetObject("pboxVideoCodecImage.Image")));
-            this.pboxVideoCodecImage.Location = new System.Drawing.Point(370, 2);
-            this.pboxVideoCodecImage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pboxVideoCodecImage.Location = new System.Drawing.Point(736, 2);
+            this.pboxVideoCodecImage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pboxVideoCodecImage.Name = "pboxVideoCodecImage";
-            this.pboxVideoCodecImage.Size = new System.Drawing.Size(91, 59);
-            this.pboxVideoCodecImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pboxVideoCodecImage.Size = new System.Drawing.Size(276, 74);
+            this.pboxVideoCodecImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pboxVideoCodecImage.TabIndex = 8;
             this.pboxVideoCodecImage.TabStop = false;
             this.pboxVideoCodecImage.UseWaitCursor = true;
@@ -485,10 +506,10 @@
             this.panel3.Controls.Add(this.lblIMDBRating);
             this.panel3.Controls.Add(this.pboxIMDBRating);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(465, 2);
-            this.panel3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel3.Location = new System.Drawing.Point(1018, 2);
+            this.panel3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(53, 59);
+            this.panel3.Size = new System.Drawing.Size(78, 74);
             this.panel3.TabIndex = 9;
             this.panel3.UseWaitCursor = true;
             // 
@@ -497,10 +518,9 @@
             this.lblIMDBRating.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblIMDBRating.AutoSize = true;
             this.lblIMDBRating.ForeColor = System.Drawing.Color.White;
-            this.lblIMDBRating.Location = new System.Drawing.Point(14, 5);
-            this.lblIMDBRating.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblIMDBRating.Location = new System.Drawing.Point(23, 6);
             this.lblIMDBRating.Name = "lblIMDBRating";
-            this.lblIMDBRating.Size = new System.Drawing.Size(27, 13);
+            this.lblIMDBRating.Size = new System.Drawing.Size(33, 16);
             this.lblIMDBRating.TabIndex = 12;
             this.lblIMDBRating.Text = "55%";
             this.lblIMDBRating.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -510,10 +530,10 @@
             // 
             this.pboxIMDBRating.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pboxIMDBRating.Image = ((System.Drawing.Image)(resources.GetObject("pboxIMDBRating.Image")));
-            this.pboxIMDBRating.Location = new System.Drawing.Point(0, 23);
-            this.pboxIMDBRating.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pboxIMDBRating.Location = new System.Drawing.Point(0, 30);
+            this.pboxIMDBRating.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pboxIMDBRating.Name = "pboxIMDBRating";
-            this.pboxIMDBRating.Size = new System.Drawing.Size(53, 36);
+            this.pboxIMDBRating.Size = new System.Drawing.Size(78, 44);
             this.pboxIMDBRating.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pboxIMDBRating.TabIndex = 11;
             this.pboxIMDBRating.TabStop = false;
@@ -523,25 +543,26 @@
             // 
             this.pboxAspectRatio.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pboxAspectRatio.Image = ((System.Drawing.Image)(resources.GetObject("pboxAspectRatio.Image")));
-            this.pboxAspectRatio.Location = new System.Drawing.Point(522, 2);
-            this.pboxAspectRatio.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pboxAspectRatio.Location = new System.Drawing.Point(1102, 2);
+            this.pboxAspectRatio.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pboxAspectRatio.Name = "pboxAspectRatio";
-            this.pboxAspectRatio.Size = new System.Drawing.Size(90, 59);
-            this.pboxAspectRatio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pboxAspectRatio.Size = new System.Drawing.Size(155, 74);
+            this.pboxAspectRatio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pboxAspectRatio.TabIndex = 10;
             this.pboxAspectRatio.TabStop = false;
             this.pboxAspectRatio.UseWaitCursor = true;
             // 
             // CinemaForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(969, 921);
+            this.ClientSize = new System.Drawing.Size(1292, 1134);
             this.Controls.Add(this.pboxPoster);
             this.Controls.Add(this.tblTop);
             this.Controls.Add(this.pnlBottom);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "CinemaForm";
             this.Text = "Cinema Poster";
             this.UseWaitCursor = true;

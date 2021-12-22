@@ -302,7 +302,6 @@
     <EmbeddedResource Include="Images\VideoResolutions\1080.png" />
     <EmbeddedResource Include="Images\VideoResolutions\3dbd.png" />
     <EmbeddedResource Include="Images\VideoResolutions\480.png" />
-    <EmbeddedResource Include="Images\VideoResolutions\4k-alt.png" />
     <EmbeddedResource Include="Images\VideoResolutions\4k.png" />
     <EmbeddedResource Include="Images\VideoResolutions\540.png" />
     <EmbeddedResource Include="Images\VideoResolutions\576.png" />
