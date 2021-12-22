@@ -258,8 +258,22 @@ namespace CinemaPosterApp
                 SetAudioCodec(movie);
                 SetVideoCodec(movie);
                 SetHDR(movie);
+                SetGenres(movie);
             }
         }
+
+        private void SetGenres(IMDBMovie movie)
+        {
+            if (movie.Genres != null && movie.Genres.Length > 0)
+            {
+                lblGenres.Text = movie.Genres;
+            }
+            else
+            {
+                lblGenres.Text = "";
+            }
+        }
+
 
         private void SetHDR(IMDBMovie movie)
         {
@@ -331,16 +345,16 @@ namespace CinemaPosterApp
                 var day = Int32.Parse(words[2]);
 
                 DateTime thisDate = new DateTime(year, month, day);
-                // lblMovieTitle.Text = thisDate.ToString("MMM") + " " + day + " " + year;
+                lblReleaseDate.Text = thisDate.ToString("MMM") + " " + day + " " + year;
                 // this.RunTimeMinsBox.Text = thisDate.ToString("MMM") + " " + day + " " + year;
             }
             else if (movie.Year != null && movie.Year.Length > 0)
             {
-                //this.lblMovieTitle.Text = movie.Year;
+               this.lblReleaseDate.Text = movie.Year;
             }
             else
             {
-                // this.lblMovieTitle.Text = "";
+                this.lblReleaseDate.Text = "";
             }
         }
 
@@ -405,7 +419,7 @@ namespace CinemaPosterApp
         private void HandleMarqueePlot_Tick(object sender, EventArgs e)
         {
             BeginInvoke((Action)delegate (){
-                if (lblPlot.Text.Length > 197)
+                if (lblPlot.Text.Length > 415)
                 {
                     if (YPos <= -this.pnlPlot.Height -50)
                     {
