@@ -246,8 +246,6 @@
     <EmbeddedResource Include="Images\AudioCodecs\DTS-HD_MA_5.1.png" />
     <EmbeddedResource Include="Images\AudioCodecs\DTS-HD_MA_7.1.png" />
     <EmbeddedResource Include="Images\AudioCodecs\dts.png" />
-    <EmbeddedResource Include="Images\AudioCodecs\dts71.png" />
-    <EmbeddedResource Include="Images\AudioCodecs\dtshd_hra.png" />
     <EmbeddedResource Include="Images\AudioCodecs\DTS_2.0.png" />
     <EmbeddedResource Include="Images\AudioCodecs\DTS_5.1.png" />
     <EmbeddedResource Include="Images\AudioCodecs\DTS_6.1.png" />
@@ -325,7 +323,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\AudioCodecs\EAC3_1.0.png" />
-    <EmbeddedResource Include="Images\AudioCodecs\EAC3_2.1.png" />
     <EmbeddedResource Include="Images\AudioCodecs\EAC3_5.1.png" />
     <EmbeddedResource Include="Images\AudioCodecs\EAC3_6.1.png" />
     <EmbeddedResource Include="Images\AudioCodecs\EAC3_7.1.png" />

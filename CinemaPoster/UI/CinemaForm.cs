@@ -238,17 +238,15 @@ namespace CinemaPosterApp
         {
             if (movie != null)
             {
-                if(movie.MovieTense == null || movie.MovieTense.Length == 0)
-                {
-                    movie.MovieTense = "Theaters Now";
-                }
-                this.lblMovieTense.Text = movie.MovieTense;
+               
                 PosterMovieTitle = movie.Title;
                 lblMovieTitle.Text = movie.FullTitle;
+                SetMovieTense(movie);
                 SetPosterImage(movie);
                 SetTagline(movie);
                 SetPlot(movie);
                 SetDurations(movie);
+                SetRunTime(movie);
                 SetAspectRatio(movie);
                 SetContentRating(movie);
                 SetReleaseDate(movie);
@@ -259,6 +257,65 @@ namespace CinemaPosterApp
                 SetVideoCodec(movie);
                 SetHDR(movie);
                 SetGenres(movie);
+                SetActors(movie);
+            }
+        }
+
+        private void SetMovieTense(IMDBMovie movie)
+        {
+            if (movie.Released != null && movie.Released.Length > 0)
+            {
+                DateTime d2 = DateTime.Parse(movie.Released);
+                if (d2 > DateTime.Now)
+                {
+                    movie.MovieTense = "Coming Soon";
+                }
+                else
+                {
+                    movie.MovieTense = "Theaters Now";
+                }
+                this.lblMovieTense.Text = movie.MovieTense;
+            }
+            else
+            {
+            }
+        }
+
+        private void SetActors(IMDBMovie movie)
+        {
+            if (movie.Actors != null && movie.Actors.Length > 0)
+            {
+                lblActors.Text = movie.Actors;
+            }
+            else
+            {
+                lblActors.Text = "";
+            }
+        }
+
+        private void SetRunTime(IMDBMovie movie)
+        {
+            var duration = "";
+            if (movie.duration != null && movie.duration.Length > 0)
+            {
+                duration = movie.duration;
+                TimeSpan span = TimeSpan.FromMilliseconds(Int32.Parse(duration)).Duration();
+                DateTime endTime = DateTime.Now.AddHours(span.Hours).AddMinutes(span.Minutes).AddSeconds(span.Seconds);
+                duration = span.Hours + "h " + span.Minutes + "m " + span.Seconds + "s";
+
+            }
+            else if (movie.RuntimeStr != null && movie.RuntimeStr.Length > 0)
+            {
+                duration = movie.RuntimeStr;
+            }
+
+            if (duration.Length > 0)
+            {
+                lblDuration.Text = duration;
+            }
+            else
+            {
+                lblDuration.Text = "";
             }
         }
 
@@ -320,13 +377,16 @@ namespace CinemaPosterApp
 
         private void SetDurations(IMDBMovie movie)
         {
-            if (movie.duration != null && movie.duration.Length > 0)
-            {
-                TimeSpan span = TimeSpan.FromMilliseconds(Int32.Parse(movie.duration)).Duration();
+            if (movie.duration != null && movie.duration.Length > 0){
+                string duration = movie.duration;
+
+                TimeSpan span = TimeSpan.FromMilliseconds(Int32.Parse(duration)).Duration();
                 DateTime endTime = DateTime.Now.AddHours(span.Hours).AddMinutes(span.Minutes).AddSeconds(span.Seconds);
-                pnlDuration.Visible = true;
-                lblDuration.Text = span.Hours + "h " + span.Minutes + "m " + span.Seconds + "s";
+                duration = span.Hours + "h " + span.Minutes + "m " + span.Seconds + "s";
+
                 lblEndTime.Text = String.Format("{0}:{1}:{2}", endTime.Hour, endTime.Minute, endTime.Second);
+                lblEndTime.Text = duration;
+                pnlDuration.Visible = true;
             }
         }
 
@@ -346,7 +406,6 @@ namespace CinemaPosterApp
 
                 DateTime thisDate = new DateTime(year, month, day);
                 lblReleaseDate.Text = thisDate.ToString("MMM") + " " + day + " " + year;
-                // this.RunTimeMinsBox.Text = thisDate.ToString("MMM") + " " + day + " " + year;
             }
             else if (movie.Year != null && movie.Year.Length > 0)
             {
