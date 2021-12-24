@@ -62,6 +62,7 @@
             this.lblIMDBRating = new System.Windows.Forms.Label();
             this.lblReleaseDate = new System.Windows.Forms.Label();
             this.lblGenres = new System.Windows.Forms.Label();
+            this.lblActors = new System.Windows.Forms.Label();
             this.tblTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
@@ -371,10 +372,10 @@
             this.tableLayoutPanel6.ColumnCount = 6;
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.07143F));
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.92857F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 199F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 263F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 243F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 233F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 149F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 197F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 182F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 174F));
             this.tableLayoutPanel6.Controls.Add(this.lblDuration, 1, 1);
             this.tableLayoutPanel6.Controls.Add(this.panel2, 3, 0);
             this.tableLayoutPanel6.Controls.Add(this.pboxVideoCodecImage, 4, 0);
@@ -385,6 +386,7 @@
             this.tableLayoutPanel6.Controls.Add(this.panel3, 0, 1);
             this.tableLayoutPanel6.Controls.Add(this.lblReleaseDate, 2, 1);
             this.tableLayoutPanel6.Controls.Add(this.lblGenres, 3, 1);
+            this.tableLayoutPanel6.Controls.Add(this.lblActors, 4, 1);
             this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 421);
             this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -398,26 +400,49 @@
             // 
             // lblDuration
             // 
-            this.lblDuration.AutoSize = true;
-            this.lblDuration.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblDuration.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDuration.ForeColor = System.Drawing.Color.White;
-            this.lblDuration.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblDuration.Location = new System.Drawing.Point(143, 39);
-            this.lblDuration.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblDuration.Name = "lblDuration";
-            this.lblDuration.Size = new System.Drawing.Size(192, 75);
-            this.lblDuration.TabIndex = 15;
-            this.lblDuration.Text = "1h 20m 00s";
-            this.lblDuration.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblDuration.UseWaitCursor = true;
+            this.pboxHdrImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pboxHdrImage.Image = ((System.Drawing.Image)(resources.GetObject("pboxHdrImage.Image")));
+            this.pboxHdrImage.Location = new System.Drawing.Point(258, 2);
+            this.pboxHdrImage.Margin = new System.Windows.Forms.Padding(2);
+            this.pboxHdrImage.Name = "pboxHdrImage";
+            this.pboxHdrImage.Size = new System.Drawing.Size(145, 27);
+            this.pboxHdrImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pboxHdrImage.TabIndex = 7;
+            this.pboxHdrImage.TabStop = false;
+            this.pboxHdrImage.UseWaitCursor = true;
+            // 
+            // pboxIMDBRating
+            // 
+            this.pboxIMDBRating.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pboxIMDBRating.Image = ((System.Drawing.Image)(resources.GetObject("pboxIMDBRating.Image")));
+            this.pboxIMDBRating.Location = new System.Drawing.Point(0, 19);
+            this.pboxIMDBRating.Margin = new System.Windows.Forms.Padding(2);
+            this.pboxIMDBRating.Name = "pboxIMDBRating";
+            this.pboxIMDBRating.Size = new System.Drawing.Size(99, 36);
+            this.pboxIMDBRating.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pboxIMDBRating.TabIndex = 13;
+            this.pboxIMDBRating.TabStop = false;
+            this.pboxIMDBRating.UseWaitCursor = true;
+            // 
+            // pboxVideoResolutionImage
+            // 
+            this.pboxVideoResolutionImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pboxVideoResolutionImage.Image = ((System.Drawing.Image)(resources.GetObject("pboxVideoResolutionImage.Image")));
+            this.pboxVideoResolutionImage.Location = new System.Drawing.Point(107, 2);
+            this.pboxVideoResolutionImage.Margin = new System.Windows.Forms.Padding(2);
+            this.pboxVideoResolutionImage.Name = "pboxVideoResolutionImage";
+            this.pboxVideoResolutionImage.Size = new System.Drawing.Size(147, 27);
+            this.pboxVideoResolutionImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pboxVideoResolutionImage.TabIndex = 6;
+            this.pboxVideoResolutionImage.TabStop = false;
+            this.pboxVideoResolutionImage.UseWaitCursor = true;
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.pboxAudioCodecImage);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(541, 2);
-            this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panel2.Location = new System.Drawing.Point(407, 2);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(257, 35);
             this.panel2.TabIndex = 4;
@@ -440,8 +465,8 @@
             // 
             this.pboxVideoCodecImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pboxVideoCodecImage.Image = ((System.Drawing.Image)(resources.GetObject("pboxVideoCodecImage.Image")));
-            this.pboxVideoCodecImage.Location = new System.Drawing.Point(804, 2);
-            this.pboxVideoCodecImage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pboxVideoCodecImage.Location = new System.Drawing.Point(604, 2);
+            this.pboxVideoCodecImage.Margin = new System.Windows.Forms.Padding(2);
             this.pboxVideoCodecImage.Name = "pboxVideoCodecImage";
             this.pboxVideoCodecImage.Size = new System.Drawing.Size(237, 35);
             this.pboxVideoCodecImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -453,40 +478,14 @@
             // 
             this.pboxAspectRatio.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pboxAspectRatio.Image = ((System.Drawing.Image)(resources.GetObject("pboxAspectRatio.Image")));
-            this.pboxAspectRatio.Location = new System.Drawing.Point(1047, 2);
-            this.pboxAspectRatio.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pboxAspectRatio.Location = new System.Drawing.Point(786, 2);
+            this.pboxAspectRatio.Margin = new System.Windows.Forms.Padding(2);
             this.pboxAspectRatio.Name = "pboxAspectRatio";
-            this.pboxAspectRatio.Size = new System.Drawing.Size(228, 35);
+            this.pboxAspectRatio.Size = new System.Drawing.Size(171, 27);
             this.pboxAspectRatio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pboxAspectRatio.TabIndex = 10;
             this.pboxAspectRatio.TabStop = false;
             this.pboxAspectRatio.UseWaitCursor = true;
-            // 
-            // pboxHdrImage
-            // 
-            this.pboxHdrImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pboxHdrImage.Image = ((System.Drawing.Image)(resources.GetObject("pboxHdrImage.Image")));
-            this.pboxHdrImage.Location = new System.Drawing.Point(342, 2);
-            this.pboxHdrImage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.pboxHdrImage.Name = "pboxHdrImage";
-            this.pboxHdrImage.Size = new System.Drawing.Size(193, 35);
-            this.pboxHdrImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pboxHdrImage.TabIndex = 7;
-            this.pboxHdrImage.TabStop = false;
-            this.pboxHdrImage.UseWaitCursor = true;
-            // 
-            // pboxVideoResolutionImage
-            // 
-            this.pboxVideoResolutionImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pboxVideoResolutionImage.Image = ((System.Drawing.Image)(resources.GetObject("pboxVideoResolutionImage.Image")));
-            this.pboxVideoResolutionImage.Location = new System.Drawing.Point(142, 2);
-            this.pboxVideoResolutionImage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.pboxVideoResolutionImage.Name = "pboxVideoResolutionImage";
-            this.pboxVideoResolutionImage.Size = new System.Drawing.Size(194, 35);
-            this.pboxVideoResolutionImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pboxVideoResolutionImage.TabIndex = 6;
-            this.pboxVideoResolutionImage.TabStop = false;
-            this.pboxVideoResolutionImage.UseWaitCursor = true;
             // 
             // pboxContentRating
             // 
@@ -511,20 +510,6 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(131, 67);
             this.panel3.TabIndex = 14;
-            this.panel3.UseWaitCursor = true;
-            // 
-            // pboxIMDBRating
-            // 
-            this.pboxIMDBRating.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pboxIMDBRating.Image = ((System.Drawing.Image)(resources.GetObject("pboxIMDBRating.Image")));
-            this.pboxIMDBRating.Location = new System.Drawing.Point(0, 23);
-            this.pboxIMDBRating.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.pboxIMDBRating.Name = "pboxIMDBRating";
-            this.pboxIMDBRating.Size = new System.Drawing.Size(131, 44);
-            this.pboxIMDBRating.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pboxIMDBRating.TabIndex = 13;
-            this.pboxIMDBRating.TabStop = false;
-            this.pboxIMDBRating.UseWaitCursor = true;
             // 
             // lblIMDBRating
             // 
@@ -543,8 +528,7 @@
             this.lblReleaseDate.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblReleaseDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblReleaseDate.ForeColor = System.Drawing.Color.White;
-            this.lblReleaseDate.Location = new System.Drawing.Point(343, 39);
-            this.lblReleaseDate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblReleaseDate.Location = new System.Drawing.Point(259, 31);
             this.lblReleaseDate.Name = "lblReleaseDate";
             this.lblReleaseDate.Size = new System.Drawing.Size(191, 75);
             this.lblReleaseDate.TabIndex = 16;
@@ -557,14 +541,26 @@
             this.lblGenres.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblGenres.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblGenres.ForeColor = System.Drawing.Color.White;
-            this.lblGenres.Location = new System.Drawing.Point(542, 39);
-            this.lblGenres.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblGenres.Location = new System.Drawing.Point(408, 31);
             this.lblGenres.Name = "lblGenres";
             this.lblGenres.Size = new System.Drawing.Size(255, 75);
             this.lblGenres.TabIndex = 17;
             this.lblGenres.Text = "Genres";
             this.lblGenres.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblGenres.UseWaitCursor = true;
+            // 
+            // lblActors
+            // 
+            this.lblActors.AutoSize = true;
+            this.lblActors.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblActors.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblActors.ForeColor = System.Drawing.Color.White;
+            this.lblActors.Location = new System.Drawing.Point(604, 31);
+            this.lblActors.Name = "lblActors";
+            this.lblActors.Size = new System.Drawing.Size(176, 61);
+            this.lblActors.TabIndex = 18;
+            this.lblActors.Text = "Actors";
+            this.lblActors.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CinemaForm
             // 
@@ -652,6 +648,7 @@
         private System.Windows.Forms.Label lblDuration;
         private System.Windows.Forms.Label lblReleaseDate;
         private System.Windows.Forms.Label lblGenres;
+        private System.Windows.Forms.Label lblActors;
     }
 }
 
