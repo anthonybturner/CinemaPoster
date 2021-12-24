@@ -133,7 +133,7 @@ namespace CinemaPosterApp
                     movie.MovieTense = "Now Playing";
                     BeginInvoke((Action)delegate ()
                     {
-                        pnlDuration.Visible = true;
+                       // pnlDuration.Visible = true;
                         SetPosterInfo(movie);
                     });
                     NowPlaying = true;
@@ -151,7 +151,7 @@ namespace CinemaPosterApp
             StartPosterTimer();
             BeginInvoke((Action)delegate ()
             {
-                pnlDuration.Visible = false;
+                //pnlDuration.Visible = false;
                 GetInitialPoster();
             });
             NowShowing = true;
@@ -167,10 +167,10 @@ namespace CinemaPosterApp
             {
                 BeginInvoke((Action)delegate ()
                 {
-                    if (pnlDuration.Visible)
-                    {
-                        pnlDuration.Visible = false;
-                    }
+                   // if (pnlDuration.Visible)
+                   // {
+                  //      pnlDuration.Visible = false;
+                  //  }
                     SetPosterInfo(movie);
                 });
             }
@@ -263,7 +263,11 @@ namespace CinemaPosterApp
 
         private void SetMovieTense(IMDBMovie movie)
         {
-            if (movie.Released != null && movie.Released.Length > 0)
+            if(NowPlaying)
+            {
+                movie.MovieTense = "Now Playing";
+            }
+            else if (movie.Released != null && movie.Released.Length > 0)
             {
                 DateTime d2 = DateTime.Parse(movie.Released);
                 if (d2 > DateTime.Now)
@@ -274,22 +278,42 @@ namespace CinemaPosterApp
                 {
                     movie.MovieTense = "Theaters Now";
                 }
-                this.lblMovieTense.Text = movie.MovieTense;
             }
-            else
-            {
-            }
+            this.lblMovieTense.Text = movie.MovieTense;
         }
 
         private void SetActors(IMDBMovie movie)
         {
-            if (movie.Actors != null && movie.Actors.Length > 0)
+            
+            var pboxActors = new List<PictureBox>();
+            pboxActors.Add(pboxActor1);
+            pboxActors.Add(pboxActor2);
+            pboxActors.Add(pboxActor3);
+            pboxActors.Add(pboxActor4);
+            pboxActors.Add(pboxActor5);
+            pboxActors.Add(pboxActor6);
+
+            var lblActorsArr = new List<Label>();
+            lblActorsArr.Add(lblActor1);
+            lblActorsArr.Add(lblActor2);
+            lblActorsArr.Add(lblActor3);
+            lblActorsArr.Add(lblActor4);
+            lblActorsArr.Add(lblActor5);
+            lblActorsArr.Add(lblActor6);
+
+            var lblCharsArr = new List<Label>();
+            lblCharsArr.Add(lblCharacter1);
+            lblCharsArr.Add(lblCharacter2);
+            lblCharsArr.Add(lblCharacter3);
+            lblCharsArr.Add(lblCharacter4);
+            lblCharsArr.Add(lblCharacter5);
+            lblCharsArr.Add(lblCharacter6);
+
+            for (int i = 0; i < movie.Cast.Length; i++)
             {
-                lblActors.Text = movie.Actors;
-            }
-            else
-            {
-                lblActors.Text = "";
+                pboxActors[i].ImageLocation = movie.Cast[i].ActorLocalImage;
+                lblActorsArr[i].Text = movie.Cast[i].ActorName;
+                lblCharsArr[i].Text = " As " + movie.Cast[i].CharacterName;
             }
         }
 
@@ -311,11 +335,11 @@ namespace CinemaPosterApp
 
             if (duration.Length > 0)
             {
-                lblDuration.Text = duration;
+                lblRuntime.Text = duration;
             }
             else
             {
-                lblDuration.Text = "";
+                lblRuntime.Text = "";
             }
         }
 
@@ -384,9 +408,9 @@ namespace CinemaPosterApp
                 DateTime endTime = DateTime.Now.AddHours(span.Hours).AddMinutes(span.Minutes).AddSeconds(span.Seconds);
                 duration = span.Hours + "h " + span.Minutes + "m " + span.Seconds + "s";
 
-                lblEndTime.Text = String.Format("{0}:{1}:{2}", endTime.Hour, endTime.Minute, endTime.Second);
-                lblEndTime.Text = duration;
-                pnlDuration.Visible = true;
+               // lblEndTime.Text = String.Format("{0}:{1}:{2}", endTime.Hour, endTime.Minute, endTime.Second);
+               // lblEndTime.Text = duration;
+               // pnlDuration.Visible = true;
             }
         }
 
@@ -478,7 +502,7 @@ namespace CinemaPosterApp
         private void HandleMarqueePlot_Tick(object sender, EventArgs e)
         {
             BeginInvoke((Action)delegate (){
-                if (lblPlot.Text.Length > 415)
+                if (lblPlot.Text.Length > 547)
                 {
                     if (YPos <= -this.pnlPlot.Height -50)
                     {

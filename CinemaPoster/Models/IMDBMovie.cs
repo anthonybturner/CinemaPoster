@@ -12,6 +12,7 @@ namespace CinemaPosterApp
 
         public IMDBMovie()
         {
+            Cast = new TopCast[6];
         }
 
         public string Id { get; set; }
@@ -80,6 +81,7 @@ namespace CinemaPosterApp
         public string Country { get; set; }
         public string Awards { get; set; }
         public string Poster { get; set; }
+        public TopCast[] Cast { get; set; }
 
         public class Rating
         {
@@ -87,7 +89,14 @@ namespace CinemaPosterApp
             public string Value { get; set; }
 
         }
+        public class TopCast
+        {
+            public string ActorName { get; set; }
+            public string CharacterName { get; set; }
+            public string ActorImage { get; set; }
+            public string ActorLocalImage { get; set; }
 
+        }
 
     }
 }

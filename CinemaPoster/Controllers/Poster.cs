@@ -44,7 +44,17 @@ namespace CinemaPosterApp.PostersDB
             {  // if it doesn't exist, create
                 Directory.CreateDirectory(directory);
             }
-            directory = System.IO.Directory.GetCurrentDirectory() + @"\data\";
+            directory = System.IO.Directory.GetCurrentDirectory() + @"\xml\";
+            if (!Directory.Exists(directory))
+            {  // if it doesn't exist, create
+                Directory.CreateDirectory(directory);
+            }
+            directory = System.IO.Directory.GetCurrentDirectory() + @"\images\";
+            if (!Directory.Exists(directory))
+            {  // if it doesn't exist, create
+                Directory.CreateDirectory(directory);
+            }
+            directory = System.IO.Directory.GetCurrentDirectory() + @"\actors\";
             if (!Directory.Exists(directory))
             {  // if it doesn't exist, create
                 Directory.CreateDirectory(directory);
@@ -55,7 +65,7 @@ namespace CinemaPosterApp.PostersDB
         {
             Boolean hasMovies = false;
             string[] newMovies = new string[0];
-            string directory = System.IO.Directory.GetCurrentDirectory() + @"\data\";
+            string directory = System.IO.Directory.GetCurrentDirectory() + @"\xml\";
 
             newMovies = Directory.GetFiles(directory, "*.xml", SearchOption.AllDirectories);
             if (newMovies != null && newMovies.Length > 0)
@@ -97,7 +107,7 @@ namespace CinemaPosterApp.PostersDB
 
         public void RemovePosters()
         {
-            string directory = System.IO.Directory.GetCurrentDirectory() + @"\data\";
+            string directory = System.IO.Directory.GetCurrentDirectory() + @"\xml\";
             System.IO.DirectoryInfo di = new DirectoryInfo(directory);
             int DelayOnRetry = 1000;
             int NumberOfRetries = 3;

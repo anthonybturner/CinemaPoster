@@ -18,10 +18,14 @@ namespace CinemaPosterApp.MovieTypes
         /// <typeparam name="T"></typeparam>
         /// <param name="serializableObject"></param>
         /// <param name="fileName"></param>
-        public void SerializeObject<T>(T serializableObject, string fileName)
+        public void SerializeObject<T>(T serializableObject, string title)
         {
             if (serializableObject == null) { return; }
 
+            string directory = System.IO.Directory.GetCurrentDirectory() + @"\xml\";
+            string filename = title.Replace(": ", "_").Replace("/", "_");
+            filename = filename.Replace(" ", "_") + ".xml";
+            string saveLocation = directory + filename;
             try
             {
                 XmlDocument xmlDocument = new XmlDocument();
@@ -31,7 +35,7 @@ namespace CinemaPosterApp.MovieTypes
                     serializer.Serialize(stream, serializableObject);
                     stream.Position = 0;
                     xmlDocument.Load(stream);
-                    xmlDocument.Save(fileName);
+                    xmlDocument.Save(saveLocation);
                 }
             }
             catch (Exception ex)
