@@ -29,7 +29,7 @@ namespace CinemaPosterApp.Utilities
 
             if (e.KeyData == Keys.N && !TargetForm.NowPlaying)
             {
-               TargetForm.GetPoster();
+               TargetForm.GetPosterAsync();
             }
         }
 

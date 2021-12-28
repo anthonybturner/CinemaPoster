@@ -88,29 +88,38 @@ namespace CinemaPosterApp
                                 {
                                     if (reader.NodeType == XmlNodeType.Element && reader.Name == "Stream")
                                     {
-                                        while (reader.MoveToNextAttribute())
+
+                                        switch (reader.GetAttribute("streamType"))
                                         {
-                                            switch (reader.Name)
-                                            {
-                                                case "displayTitle":
-                                                var codec = reader.Value;
-                                                if (codec.Contains("Unknown"))
+                                            case "1": //Video info
+                                                if (reader.GetAttribute("displayTitle").Contains("HDR"))
+                                                {
+                                                    mtech.hdr = "hdr";
+                                                }
+                                                break;
+
+                                            case "2":
+                                                var codec = reader.GetAttribute("extendedDisplayTitle");
+                                                if (codec.Contains("DTS:X"))
+                                                {
+
+                                                    var acodec = codec.Substring(0, codec.IndexOf("(English")).Trim();
+                                                    acodec = acodec.Replace(":", "").Trim();
+                                                    acodec = acodec.Replace(" ", "_");
+                                                    mtech.audioCodec = acodec;
+                                                }
+                                                else if (codec.Contains("Unknown"))
                                                 {
                                                     mtech.audioCodec = codec.Replace("Unknown (", "").Replace(")", "").Replace(" ", "_");
                                                 }
-                                                else if (codec.Contains("English") && !codec.Contains("(PGS)"))
+                                                else if (codec.Contains("English"))
                                                 {
-                                                    mtech.audioCodec = codec.Replace("English (", "").Replace(")", "").Replace(" ", "_");
-                                                }
-                                                else
-                                                {
-                                                    if (reader.Name == "displayTitle" && reader.Value.Contains("HDR"))
-                                                    {
-                                                        mtech.hdr = "hdr";
-                                                    }
+                                                    var acodec = codec.Replace("English (", "").Replace(")", "");
+                                                    acodec = acodec.Replace(":", "").Trim();
+                                                    acodec = acodec.Replace(" ", "_");
+                                                    mtech.audioCodec = acodec;
                                                 }
                                                 break;
-                                            }                                           
                                         }
                                     }
                                 }

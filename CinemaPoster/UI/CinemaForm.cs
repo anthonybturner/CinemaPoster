@@ -1,4 +1,5 @@
-﻿using CinemaPosterApp.MovieTypes;
+﻿using CinemaPosterApp.Controllers;
+using CinemaPosterApp.MovieTypes;
 using CinemaPosterApp.PostersDB;
 using CinemaPosterApp.Utilities;
 using System;
@@ -14,6 +15,8 @@ namespace CinemaPosterApp
 {
     public partial class CinemaForm : Form
     {
+
+
         private const String PLEX_SHIELD = "PlexShield";
         private const String PLEX_NAS = "PlexNas";
         private const String PLEX_SHIELD_TOKEN = "GVef81rrzoTVs1GaNFn4";
@@ -23,7 +26,7 @@ namespace CinemaPosterApp
         public Int32 NewMoviesRefreshTime { get; set; }
 
         private System.Timers.Timer GetPosterTimer;
-        private Bitmap PosterImage, AspectRatioImage, ContentRatingImage, AudienceRatingImage, 
+        private Bitmap PosterImage, AspectRatioImage, ContentRatingImage, AudienceRatingImage,
             VideoResolutionImage, VideoFramerateImage, AudioCodecImage, VideoCodecImage, HdrImage;
         private Poster CinemaPoster;
         public Int32 PosterRefreshTime { get; set; }
@@ -33,7 +36,7 @@ namespace CinemaPosterApp
         public string PosterMovieTitle { get; private set; }
         public string IP { get; set; }
         public Dictionary<string, string> ServerIPs { get; set; }
-      
+
 
         public String PlexToken { get; set; }
         public Uri appPlexURL { get; private set; }
@@ -86,9 +89,10 @@ namespace CinemaPosterApp
 
         private async void HandleCheckNowPlayEvent(object sender, ElapsedEventArgs e)
         {
-           await CheckNowPlaying();
+            await CheckNowPlaying();
         }
 
+       
         private async Task CheckNowPlaying()
         {
             Logger.WriteLog("Entering CheckNowPlaying():", "");
@@ -115,7 +119,7 @@ namespace CinemaPosterApp
                     }
                 }
             }
-            
+
         }
         private async Task StartNowPlaying(MovieTechnical mtech)
         {
@@ -123,7 +127,7 @@ namespace CinemaPosterApp
             try
             {
                 var title = mtech.title + " " + (mtech.year != null ? mtech.year : "");
-                IMDBMovie movie = await Task.Run(() => CinemaPoster.FetchMovieAsync(title, mtech));
+                IMDBMovie movie = await Task.Run(() => ImdbFetcher.FetchMovieAsync(title, mtech));
                 if (movie != null)
                 {
                     if (movie.Tagline == null || movie.Tagline.Length == 0)
@@ -133,7 +137,7 @@ namespace CinemaPosterApp
                     movie.MovieTense = "Now Playing";
                     BeginInvoke((Action)delegate ()
                     {
-                       // pnlDuration.Visible = true;
+                        // pnlDuration.Visible = true;
                         SetPosterInfo(movie);
                     });
                     NowPlaying = true;
@@ -149,45 +153,56 @@ namespace CinemaPosterApp
         private void StopNowPlaying()
         {
             StartPosterTimer();
-            BeginInvoke((Action)delegate ()
-            {
-                //pnlDuration.Visible = false;
-                GetInitialPoster();
-            });
+            GetInitialPoster();
             NowShowing = true;
             Brightness.SetBrightness(255);
         }
         #endregion
 
         #region Posters
-        public void GetPoster()
+        public async Task GetPosterAsync()
         {
             IMDBMovie movie = CinemaPoster.GetRandomPoster();
-            if (movie != null)
+
+            if (movie == null)
             {
-                BeginInvoke((Action)delegate ()
-                {
-                   // if (pnlDuration.Visible)
-                   // {
-                  //      pnlDuration.Visible = false;
-                  //  }
-                    SetPosterInfo(movie);
-                });
+                await CinemaPoster.InitPostersAsync();
+            }
+            else if(File.Exists(movie.LocalImage))
+            {
+                InvokeSetPosterInfo(movie);
             }
         }
+        public void InvokeSetPosterInfo(IMDBMovie movie)
+        {
+            BeginInvoke((Action)delegate ()
+            {
+                SetPosterInfo(movie);
+            });
+            
+        }
+
         public void GetInitialPoster()
         {
             IMDBMovie movie = CinemaPoster.GetRandomPoster();
             if (movie != null)
             {
-              // SetPosterInfo(movie);
+                InvokeSetPosterInfo(movie);
             }
         }
+        public void SetInitialPoster(IMDBMovie movie)
+        {
+            if (movie != null)
+            {
+                InvokeSetPosterInfo(movie);
+                StartPosters();
+            }
+        }
+
         public void StartPosters()
         {
             StartPosterTimer();
             StartCheckNowPlayingTimer();
-            GetInitialPoster();
         }
 
         public void StopPosters()
@@ -238,7 +253,7 @@ namespace CinemaPosterApp
         {
             if (movie != null)
             {
-               
+
                 PosterMovieTitle = movie.Title;
                 lblMovieTitle.Text = movie.FullTitle;
                 SetMovieTense(movie);
@@ -263,25 +278,34 @@ namespace CinemaPosterApp
 
         private void SetMovieTense(IMDBMovie movie)
         {
-            if(NowPlaying)
+            if (NowPlaying)
             {
                 movie.MovieTense = "Now Playing";
             }
-            else if (movie.Released != null && movie.Released.Length > 0)
+            else
             {
-                DateTime d2 = DateTime.Parse(movie.Released);
-                if (d2 > DateTime.Now)
+                var date = "";
+                if (movie.Released != null && movie.Released.Length > 0)
                 {
-                    movie.MovieTense = "Coming Soon";
+                    date = movie.Released;
                 }
-                else
+                else if (movie.Year != null && movie.Year.Length > 0)
                 {
-                    movie.MovieTense = "Theaters Now";
+                    date = movie.Year;
+                }
+                if(date.Length > 0){ 
+                  
+                    if (Int32.Parse(date) > DateTime.Now.Year)
+                    {
+                        movie.MovieTense = "Coming Soon";
+                    }else{
+                        movie.MovieTense = "Theaters Now";
+                    }
                 }
             }
             this.lblMovieTense.Text = movie.MovieTense;
         }
-
+   
         private void SetActors(IMDBMovie movie)
         {
             
@@ -311,6 +335,7 @@ namespace CinemaPosterApp
 
             for (int i = 0; i < movie.Cast.Length; i++)
             {
+                if (movie.Cast[i] == null) continue;
                 pboxActors[i].ImageLocation = movie.Cast[i].ActorLocalImage;
                 lblActorsArr[i].Text = movie.Cast[i].ActorName;
                 lblCharsArr[i].Text = " As " + movie.Cast[i].CharacterName;
@@ -486,8 +511,11 @@ namespace CinemaPosterApp
             {
                 xPos = lblPlot.Location.X;
                 YPos = lblPlot.Location.Y;
-               
-                MarqueePlotTimer.Start();
+
+                if (MarqueePlotTimer != null)
+                {
+                    MarqueePlotTimer.Start();
+                }
                
                 pnlPlot.Visible = true;
                 lblPlot.Text = movie.Plot;
@@ -501,24 +529,32 @@ namespace CinemaPosterApp
 
         private void HandleMarqueePlot_Tick(object sender, EventArgs e)
         {
-            BeginInvoke((Action)delegate (){
-                if (lblPlot.Text.Length > 547)
-                {
-                    if (YPos <= -this.pnlPlot.Height -50)
+            try
+            {
+                BeginInvoke((Action)delegate () {
+                    if (lblPlot.Text.Length > 547)
                     {
-                        this.lblPlot.Location = new System.Drawing.Point(xPos, 0);
-                        YPos = 0;
+                        if (YPos <= -this.pnlPlot.Height - 50)
+                        {
+                            this.lblPlot.Location = new System.Drawing.Point(xPos, 0);
+                            YPos = 0;
+                        }
+                        else
+                        {
+                            this.lblPlot.Location = new System.Drawing.Point(xPos, YPos);
+                            YPos -= 10;
+                        }
                     }
-                    else{
-                        this.lblPlot.Location = new System.Drawing.Point(xPos, YPos);
-                        YPos -= 10; 
+                    else
+                    {
+                        this.lblPlot.Location = new System.Drawing.Point(0, 0);
                     }
-                }
-                else
-                {
-                    this.lblPlot.Location = new System.Drawing.Point(0, 0);
-                }
-            });            
+                });
+            }
+            catch(InvalidOperationException ex)
+            {
+                Logger.WriteLog(ex.Message, ex.ToString());
+            }
         }
 
         private void SetTagline(IMDBMovie movie)
@@ -540,7 +576,7 @@ namespace CinemaPosterApp
                 if (movie.Image == null || movie.Image.Length == 0)
                 {
                     string title = movie.Title.Replace(" ", "_");
-                    string file = System.IO.Directory.GetCurrentDirectory() + String.Format(@"\data\{0}.jpg", title);
+                    string file = System.IO.Directory.GetCurrentDirectory() + String.Format(@"\images\{0}.jpg", title);
                     if (File.Exists(file))
                     {
                         movie.Image = file;
@@ -573,7 +609,7 @@ namespace CinemaPosterApp
         #region EventHandlers
         private void HandleGetPoster(object source, ElapsedEventArgs e)
         {
-            GetPoster();
+            GetPosterAsync();
         }
         private void HandleMNewoviesEventHandler(object source, ElapsedEventArgs e)
         {

@@ -21,67 +21,83 @@ namespace CinemaPosterApp.PostersDB
 {
     public class Poster
     {
+        public delegate void SaveMovieCompleted(IMDBMovie movie, Int32 index);
+
+
         private List<IMDBMovie> movies;
         private List<ComingSoonMovie> fetchedMovies;
         private CinemaForm mainForm;
         private ImdbFetcher fetcher;
-        private OmdbApi OmdbApi;
-        public Poster(CinemaForm form1)
+
+        public string LogDirectory { get; private set; }
+        public string XMLDirectory { get; private set; }
+        public string ImageDirecgtory { get; private set; }
+        public string ActorsDirectory { get; private set; }
+
+        public Poster()
         {
-            mainForm = form1;
-            OmdbApi = new OmdbApi(mainForm);
             movies = new List<IMDBMovie>();
             fetchedMovies = new List<ComingSoonMovie>();
             fetcher = new ImdbFetcher();
             CreateDirectories();
-           
+        }
+
+        public Poster(CinemaForm form)
+        {
+            mainForm = form;
+            movies = new List<IMDBMovie>();
+            fetchedMovies = new List<ComingSoonMovie>();
+            fetcher = new ImdbFetcher();
+            CreateDirectories();
         }
 
         private void CreateDirectories()
         {
-            string directory = System.IO.Directory.GetCurrentDirectory() + @"\logs\";
-            if (!Directory.Exists(directory))
+            LogDirectory = System.IO.Directory.GetCurrentDirectory() + @"\logs\";
+            if (!Directory.Exists(LogDirectory))
             {  // if it doesn't exist, create
-                Directory.CreateDirectory(directory);
+                Directory.CreateDirectory(LogDirectory);
             }
-            directory = System.IO.Directory.GetCurrentDirectory() + @"\xml\";
-            if (!Directory.Exists(directory))
+            XMLDirectory = System.IO.Directory.GetCurrentDirectory() + @"\xml\";
+            if (!Directory.Exists(XMLDirectory))
             {  // if it doesn't exist, create
-                Directory.CreateDirectory(directory);
+                Directory.CreateDirectory(XMLDirectory);
             }
-            directory = System.IO.Directory.GetCurrentDirectory() + @"\images\";
-            if (!Directory.Exists(directory))
+            ImageDirecgtory = System.IO.Directory.GetCurrentDirectory() + @"\images\";
+            if (!Directory.Exists(ImageDirecgtory))
             {  // if it doesn't exist, create
-                Directory.CreateDirectory(directory);
+                Directory.CreateDirectory(ImageDirecgtory);
             }
-            directory = System.IO.Directory.GetCurrentDirectory() + @"\actors\";
-            if (!Directory.Exists(directory))
+            ActorsDirectory = System.IO.Directory.GetCurrentDirectory() + @"\actors\";
+            if (!Directory.Exists(ActorsDirectory))
             {  // if it doesn't exist, create
-                Directory.CreateDirectory(directory);
+                Directory.CreateDirectory(ActorsDirectory);
             }
         }
 
         public async Task InitPostersAsync()
         {
-            Boolean hasMovies = false;
-            string[] newMovies = new string[0];
-            string directory = System.IO.Directory.GetCurrentDirectory() + @"\xml\";
-
-            newMovies = Directory.GetFiles(directory, "*.xml", SearchOption.AllDirectories);
-            if (newMovies != null && newMovies.Length > 0)
+            string[] MovieXMLList;
+            MovieXMLList = Directory.GetFiles(XMLDirectory, "*.xml", SearchOption.AllDirectories);
+            if (MovieXMLList != null && MovieXMLList.Length > 0)
             {
-                hasMovies = true;
-            }
-            
-            if (hasMovies)
-            {//movies exists on drive
-                PopulatePosters(newMovies);
+                PopulatePosters(MovieXMLList);
             }
             else
             {
-                await FetchNewMoviesAsync();
+                SaveMovieCompleted callback = OnMovieSaved;
+                await ImdbFetcher.FetchNewMoviesAsync(callback);
             }
-           mainForm.StartPosters();
+        }
+
+        public void OnMovieSaved(IMDBMovie movie, Int32 count)
+        {
+
+            movies.Add(movie);
+            if (mainForm != null && count == 1)
+            {
+                mainForm.SetInitialPoster(movie);
+            }
         }
 
         private void PopulatePosters(String[] files)
@@ -95,6 +111,7 @@ namespace CinemaPosterApp.PostersDB
                     movies.Add(m);
                 }
             }
+            mainForm.SetInitialPoster(GetRandomPoster());
         }
 
         public IMDBMovie GetRandomPoster()
@@ -131,42 +148,7 @@ namespace CinemaPosterApp.PostersDB
             movies = new List<IMDBMovie>();
         }
 
-        public async Task<IMDBMovie> FetchMovieAsync(string mtitle, MovieTechnical mtech)
-        {
-
-            //IMDBMovie movie = await Task.Run(() => OmdbApi.GetMovieAsync(mtitle, false));
-
-            IMDBMovie movie = await Task.Run(() => ImdbFetcher.DownloadMovieAsync(mtitle));
-            movie.AspectRatio = mtech.aspectRatio;
-            movie.Tagline = movie.Tagline;
-            movie.duration = mtech.duration;
-            movie.Rated = mtech.contentRating;
-            movie.AudienceRatingImage = mtech.audienceRatingImage;
-            movie.AudienceRating = mtech.audienceRating;
-            movie.VideoResolution = mtech.videoResolution;
-            movie.videoFrameRate = mtech.videoFrameRate;
-            movie.AudioCodec = mtech.audioCodec;
-            movie.VideoCodec = mtech.videoCodec;
-            movie.Hdr = mtech.hdr;
-
-            //await Task.Run(() => OmdbApi.DownloadPosterAsync(movie));
-
-            await Task.Run(() => ImdbFetcher.SaveMovie(movie, new Serializer(), new ApiLib("k_u215r302")));
-
-
-            return movie;
-        }
-
-        private async Task FetchNewMoviesAsync()
-        {
-
-            List<IMDBMovie> pmMovies = await Task.Run( () => ImdbFetcher.DownloadMostPopularMoviesAsync());
-            List<IMDBMovie> csMovies = await Task.Run(() => ImdbFetcher.DownloadComingSoonMoviesAsync());
-            movies.AddRange(pmMovies);
-            movies.AddRange(csMovies);
-            await Task.Run(() => ImdbFetcher.SaveMovies(movies));
-
-        }
+       
     }
 }
 

@@ -327,6 +327,10 @@
     <EmbeddedResource Include="Images\AudioCodecs\EAC3_6.1.png" />
     <EmbeddedResource Include="Images\AudioCodecs\EAC3_7.1.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\AudioCodecs\dtsx.png" />
+    <EmbeddedResource Include="Images\AudioCodecs\DTSX_7.1.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

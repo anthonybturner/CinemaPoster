@@ -139,7 +139,7 @@ namespace CinemaPoster.Controllers
         public async Task DownloadPosterAsync(IMDBMovie movie)
         {
             var url = String.Format("http://img.omdbapi.com/?i={0}&h={1}&apikey=16dc3a0c", movie.imdbID, "3000");
-            string directory = System.IO.Directory.GetCurrentDirectory() + @"\data\";
+            string directory = System.IO.Directory.GetCurrentDirectory() + @"\images\";
             string filename = movie.Title.Replace(": ", "_");
 
             filename = filename.Replace(" ", "_") + ".jpg";
@@ -266,7 +266,7 @@ namespace CinemaPoster.Controllers
         {
             Serializer ser = new Serializer();
             var apiLib = new ApiLib("k_u215r302");
-            string directory = System.IO.Directory.GetCurrentDirectory() + @"\data\";
+            string directory = System.IO.Directory.GetCurrentDirectory() + @"\images\";
 
             foreach (IMDBMovie movie in movies)
             {

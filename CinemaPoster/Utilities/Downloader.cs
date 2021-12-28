@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CinemaPosterApp.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,29 +25,36 @@ namespace CinemaPoster.Utilities
         public async Task Download(string url, string saveAs)
         {
             var httpClient = new HttpClient();
-            var response = await httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Head, url));
-            var parallelDownloadSuported = response.Headers.AcceptRanges.Contains("bytes");
-            var contentLength = response.Content.Headers.ContentLength ?? 0;
-
-            if (parallelDownloadSuported)
+            try
             {
-                const double numberOfParts = 5.0;
-                var tasks = new List<Task>();
-                var partSize = (long)Math.Ceiling(contentLength / numberOfParts);
+                var response = await httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Head, url));
+                var parallelDownloadSuported = response.Headers.AcceptRanges.Contains("bytes");
+                var contentLength = response.Content.Headers.ContentLength ?? 0;
 
-                File.Create(saveAs).Dispose();
-
-                for (var i = 0; i < numberOfParts; i++)
+                if (parallelDownloadSuported)
                 {
-                    var start = i * partSize + Math.Min(1, i);
-                    var end = Math.Min((i + 1) * partSize, contentLength);
+                    const double numberOfParts = 5.0;
+                    var tasks = new List<Task>();
+                    var partSize = (long)Math.Ceiling(contentLength / numberOfParts);
 
-                    tasks.Add(
-                        Task.Run(() => DownloadPart(url, saveAs, start, end))
-                        );
+                    File.Create(saveAs).Dispose();
+
+                    for (var i = 0; i < numberOfParts; i++)
+                    {
+                        var start = i * partSize + Math.Min(1, i);
+                        var end = Math.Min((i + 1) * partSize, contentLength);
+
+                        tasks.Add(
+                            Task.Run(() => DownloadPart(url, saveAs, start, end))
+                            );
+                    }
+
+                    await Task.WhenAll(tasks);
                 }
-
-                await Task.WhenAll(tasks);
+            }
+            catch(Exception e)
+            {
+                Logger.WriteLog(e.Message, e.ToString());
             }
         }
 
@@ -57,7 +65,6 @@ namespace CinemaPoster.Utilities
             {
                 var message = new HttpRequestMessage(HttpMethod.Get, url);
                 message.Headers.Add("Range", string.Format("bytes={0}-{1}", start, end));
-
                 fileStream.Position = start;
                 await httpClient.SendAsync(message).Result.Content.CopyToAsync(fileStream);
             }

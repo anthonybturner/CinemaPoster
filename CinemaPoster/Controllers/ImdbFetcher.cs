@@ -48,6 +48,39 @@ namespace CinemaPosterApp.Controllers
             }
         }
 
+        public static async Task<IMDBMovie> FetchMovieAsync(string mtitle, MovieTechnical mtech)
+        {
+            IMDBMovie movie = await Task.Run(() => ImdbFetcher.DownloadMovieAsync(mtitle));
+            movie.AspectRatio = mtech.aspectRatio;
+            movie.Tagline = movie.Tagline;
+            movie.duration = mtech.duration;
+            movie.Rated = mtech.contentRating;
+            movie.AudienceRatingImage = mtech.audienceRatingImage;
+            movie.AudienceRating = mtech.audienceRating;
+            movie.VideoResolution = mtech.videoResolution;
+            movie.videoFrameRate = mtech.videoFrameRate;
+            movie.AudioCodec = mtech.audioCodec;
+            movie.VideoCodec = mtech.videoCodec;
+            movie.Hdr = mtech.hdr;
+
+            await Task.Run(() => ImdbFetcher.SaveMovie(movie, new Serializer(), new ApiLib("k_u215r302")));
+            if (movie.Title == null)
+            {
+                movie.Title = mtitle;
+            }
+            return movie;
+        }
+
+        public static async Task FetchNewMoviesAsync(PostersDB.Poster.SaveMovieCompleted callback)
+        {
+            List<IMDBMovie> TempMovies = new List<IMDBMovie>();
+            List<IMDBMovie> pmMovies = await Task.Run(() => ImdbFetcher.DownloadMostPopularMoviesAsync());
+            List<IMDBMovie> csMovies = await Task.Run(() => ImdbFetcher.DownloadComingSoonMoviesAsync());
+            TempMovies.AddRange(pmMovies);
+            TempMovies.AddRange(csMovies);
+            await Task.Run(() => ImdbFetcher.SaveMovies(TempMovies, callback));
+        }
+
         public static async Task<IMDBMovie> DownloadMovieAsync(string title)
         {
             IMDBMovie movie = new IMDBMovie();
@@ -174,7 +207,7 @@ namespace CinemaPosterApp.Controllers
                         wantedPoster = x;
                         continue;
                     }
-                    if (x.Height > wantedPoster.Height && x.Width >= 1440)
+                    if (x.Height > wantedPoster.Height && x.Width >= 1440  && x.Height <= 2100 && x.Height >= 1080)
                     {
                         wantedPoster = x;
                     }
@@ -184,14 +217,14 @@ namespace CinemaPosterApp.Controllers
                 {
                     var url = wantedPoster.Link;
                     byte[] imageBytes;
-                    HttpWebRequest imageRequest = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
-                    WebResponse imageResponse = imageRequest.GetResponse();
-                    Stream responseStream = imageResponse.GetResponseStream();
                     FileStream fs = null;
                     BinaryWriter bw = null;
-                    using (BinaryReader br = new BinaryReader(responseStream))
+                    try
                     {
-                        try
+                        HttpWebRequest imageRequest = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
+                        WebResponse imageResponse = imageRequest.GetResponse();
+                        Stream responseStream = imageResponse.GetResponseStream();
+                        using (BinaryReader br = new BinaryReader(responseStream))
                         {
                             imageBytes = br.ReadBytes(500000);
                             br.Close();
@@ -201,20 +234,20 @@ namespace CinemaPosterApp.Controllers
                             bw = new BinaryWriter(fs);
                             bw.Write(imageBytes);
                         }
-                        catch (Exception e)
+                    }
+                    catch(Exception e)
+                    {
+                        Logger.WriteLog(e.Message, e.ToString());
+                    }
+                    finally
+                    {
+                        if (fs != null)
                         {
-                            Logger.WriteLog(e.Message, e.ToString());
+                            fs.Close();
                         }
-                        finally
+                        if (bw != null)
                         {
-                            if (fs != null)
-                            {
-                                fs.Close();
-                            }
-                            if (bw != null)
-                            {
-                                bw.Close();
-                            }
+                            bw.Close();
                         }
                     }
                 }
@@ -223,7 +256,6 @@ namespace CinemaPosterApp.Controllers
         private static async Task DownloadActorsAsync(IMDBMovie movie, ApiLib apiLib)
         {
             string dir = System.IO.Directory.GetCurrentDirectory() + @"\actors\";
-            
             var casts = (from x in movie.Cast  where x != null select x).ToList();
             foreach (var cast in casts)
             {
@@ -240,14 +272,16 @@ namespace CinemaPosterApp.Controllers
             } 
         }
 
-        public static async Task SaveMovies(List<IMDBMovie> movies)
+        public static async Task SaveMovies(List<IMDBMovie> movies, PostersDB.Poster.SaveMovieCompleted callback)
         {
             Serializer ser = new Serializer();
 
             var apiLib = new ApiLib("k_u215r302");
-            foreach (IMDBMovie movie in movies)
+            for (var i = 0; i < movies.Count; i++)
             {
+                IMDBMovie movie = movies[i];
                 await SaveMovie(movie, ser, apiLib);
+                callback(movie, i+1);
             }
         }
     }
