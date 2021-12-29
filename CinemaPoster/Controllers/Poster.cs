@@ -9,7 +9,6 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using IMDbApiLib;
-using System.Text.Json;
 using CinemaPosterApp.MovieTypes;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;

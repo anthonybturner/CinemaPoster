@@ -257,6 +257,7 @@ namespace CinemaPosterApp.Controllers
         {
             string dir = System.IO.Directory.GetCurrentDirectory() + @"\actors\";
             var casts = (from x in movie.Cast  where x != null select x).ToList();
+           // Downloader dl = new Downloader();
             foreach (var cast in casts)
             {
                 var filename = cast.ActorName.Replace(": ", "_").Replace("/", "_");
@@ -264,11 +265,11 @@ namespace CinemaPosterApp.Controllers
                 string saveLocation = dir + filename;
                 cast.ActorLocalImage = saveLocation;
               
-                if (!File.Exists(saveLocation))//Check if Actor data exists already
-                {
-                    var url = cast.ActorImage;
-                    Task.Run(() => new Downloader().Download(url, saveLocation)).Wait();
-                }
+                //if (!File.Exists(saveLocation))//Check if Actor data exists already
+                //{
+                //    var url = cast.ActorImage;
+                //     Task.Run(async () => await dl.Download(url, saveLocation)).Wait();
+                //}-
             } 
         }
 

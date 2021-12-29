@@ -1,4 +1,5 @@
-﻿using CinemaPosterApp.Controllers;
+﻿using CinemaPoster.Utilities;
+using CinemaPosterApp.Controllers;
 using CinemaPosterApp.MovieTypes;
 using CinemaPosterApp.PostersDB;
 using CinemaPosterApp.Utilities;
@@ -22,7 +23,6 @@ namespace CinemaPosterApp
         private const String PLEX_SHIELD_TOKEN = "GVef81rrzoTVs1GaNFn4";
         private const String PLEX_NAS_TOKEN = "pUhBki4ZxSMM1eeM_Ym6";
         public const Int32 MAX_MOVIES = 2;
-
         public Int32 NewMoviesRefreshTime { get; set; }
 
         private System.Timers.Timer GetPosterTimer;
@@ -48,6 +48,7 @@ namespace CinemaPosterApp
         public CinemaForm()
         {
             InitializeComponent();
+
             NewMoviesRefreshTime = 60;
             PosterRefreshTime = 1;
             fullScreen = new FullScreen(this);
@@ -92,7 +93,7 @@ namespace CinemaPosterApp
             await CheckNowPlaying();
         }
 
-       
+
         private async Task CheckNowPlaying()
         {
             Logger.WriteLog("Entering CheckNowPlaying():", "");
@@ -168,7 +169,7 @@ namespace CinemaPosterApp
             {
                 await CinemaPoster.InitPostersAsync();
             }
-            else if(File.Exists(movie.LocalImage))
+            else if (File.Exists(movie.LocalImage))
             {
                 InvokeSetPosterInfo(movie);
             }
@@ -179,7 +180,7 @@ namespace CinemaPosterApp
             {
                 SetPosterInfo(movie);
             });
-            
+
         }
 
         public void GetInitialPoster()
@@ -194,8 +195,8 @@ namespace CinemaPosterApp
         {
             if (movie != null)
             {
-                InvokeSetPosterInfo(movie);
                 StartPosters();
+                InvokeSetPosterInfo(movie);
             }
         }
 
@@ -255,11 +256,11 @@ namespace CinemaPosterApp
             {
 
                 PosterMovieTitle = movie.Title;
-                lblMovieTitle.Text = movie.FullTitle;
-                SetMovieTense(movie);
-                SetPosterImage(movie);
+              //  SetTitle(movie);
                 SetTagline(movie);
                 SetPlot(movie);
+                SetMovieTense(movie);
+                SetPosterImage(movie);
                 SetDurations(movie);
                 SetRunTime(movie);
                 SetAspectRatio(movie);
@@ -273,6 +274,21 @@ namespace CinemaPosterApp
                 SetHDR(movie);
                 SetGenres(movie);
                 SetActors(movie);
+            }
+        }
+
+        private void SetTitle(IMDBMovie movie)
+        {
+           
+            if (movie.FullTitle != null && movie.FullTitle.Length > 0)
+            {
+              //  lblMovieTitle.Visible = true;
+               // lblMovieTitle.Text = movie.FullTitle;
+            }
+            else
+            {
+              // lblMovieTitle.Visible = false;
+               // lblMovieTitle.Text = "";
             }
         }
 
@@ -293,22 +309,22 @@ namespace CinemaPosterApp
                 {
                     date = movie.Year;
                 }
-                if(date.Length > 0){ 
-                  
+                if (date.Length > 0) {
+
                     if (Int32.Parse(date) > DateTime.Now.Year)
                     {
                         movie.MovieTense = "Coming Soon";
-                    }else{
+                    } else {
                         movie.MovieTense = "Theaters Now";
                     }
                 }
             }
             this.lblMovieTense.Text = movie.MovieTense;
         }
-   
-        private void SetActors(IMDBMovie movie)
+
+        private async void SetActors(IMDBMovie movie)
         {
-            
+
             var pboxActors = new List<PictureBox>();
             pboxActors.Add(pboxActor1);
             pboxActors.Add(pboxActor2);
@@ -335,8 +351,34 @@ namespace CinemaPosterApp
 
             for (int i = 0; i < movie.Cast.Length; i++)
             {
+
+
                 if (movie.Cast[i] == null) continue;
-                pboxActors[i].ImageLocation = movie.Cast[i].ActorLocalImage;
+               
+                
+                if (!File.Exists(movie.Cast[i].ActorLocalImage))//Check if Actor data exists already
+                {
+                   
+                    try
+                    {
+                        System.Net.WebRequest request = System.Net.WebRequest.Create(movie.Cast[i].ActorImage);
+                        System.Net.WebResponse response = request.GetResponse();
+                        System.IO.Stream responseStream = response.GetResponseStream();
+                        Bitmap bitmap2 = new Bitmap(responseStream);
+                        pboxActors[i].Image = bitmap2;
+
+                        pboxActors[i].Image.Save(movie.Cast[i].ActorLocalImage);
+                    }catch(Exception e)
+                    {
+                        Logger.WriteLog(e.Message, "");
+                    }
+                   
+                }
+                else
+                {
+                    pboxActors[i].ImageLocation = movie.Cast[i].ActorLocalImage;
+                }
+
                 lblActorsArr[i].Text = movie.Cast[i].ActorName;
                 lblCharsArr[i].Text = " As " + movie.Cast[i].CharacterName;
             }
@@ -360,11 +402,13 @@ namespace CinemaPosterApp
 
             if (duration.Length > 0)
             {
+                lblRuntime.Visible = true;
                 lblRuntime.Text = duration;
             }
             else
             {
                 lblRuntime.Text = "";
+                lblRuntime.Visible = false;
             }
         }
 
@@ -372,19 +416,21 @@ namespace CinemaPosterApp
         {
             if (movie.Genres != null && movie.Genres.Length > 0)
             {
+                lblGenres.Visible = true;
                 lblGenres.Text = movie.Genres;
             }
             else
             {
                 lblGenres.Text = "";
+                lblGenres.Visible = false;
             }
         }
 
 
         private void SetHDR(IMDBMovie movie)
         {
-            
-           SetPosterConttrol(pboxHdrImage, movie.Hdr, "VideoCodecs", HdrImage, "HDR ");
+
+            SetPosterConttrol(pboxHdrImage, movie.Hdr, "VideoCodecs", HdrImage, "HDR ");
         }
 
         private void SetVideoCodec(IMDBMovie movie)
@@ -394,7 +440,7 @@ namespace CinemaPosterApp
 
         private void SetAudioCodec(IMDBMovie movie)
         {
-           SetPosterConttrol(pboxAudioCodecImage, movie.AudioCodec, "AudioCodecs", AudioCodecImage, "Audio Codec ");
+            SetPosterConttrol(pboxAudioCodecImage, movie.AudioCodec, "AudioCodecs", AudioCodecImage, "Audio Codec ");
         }
 
         private void SetVideoFramerate(IMDBMovie movie)
@@ -404,16 +450,18 @@ namespace CinemaPosterApp
 
         private void SetVideoResolution(IMDBMovie movie)
         {
-           SetPosterConttrol(pboxVideoResolutionImage, movie.VideoResolution, "VideoResolutions", VideoResolutionImage, "Video Resolution"); 
+            SetPosterConttrol(pboxVideoResolutionImage, movie.VideoResolution, "VideoResolutions", VideoResolutionImage, "Video Resolution");
         }
         private void SetAudienceRatingImage(IMDBMovie movie)
         {
             if (movie.imdbRating == null || movie.imdbRating.Length <= 0)
             {
+                lblIMDBRating.Visible = false;
                 lblIMDBRating.Text = "";
                 pboxIMDBRating.Visible = false;
             }
             else {
+                lblIMDBRating.Visible = true;
                 lblIMDBRating.Text = ((Double.Parse(movie.imdbRating) / 10.0) * 100).ToString() + "%";
                 SetPosterConttrol(pboxIMDBRating, "defaultEmpty", "AudienceRating", AudienceRatingImage, "imdbRating");
             }
@@ -426,22 +474,22 @@ namespace CinemaPosterApp
 
         private void SetDurations(IMDBMovie movie)
         {
-            if (movie.duration != null && movie.duration.Length > 0){
+            if (movie.duration != null && movie.duration.Length > 0) {
                 string duration = movie.duration;
 
                 TimeSpan span = TimeSpan.FromMilliseconds(Int32.Parse(duration)).Duration();
                 DateTime endTime = DateTime.Now.AddHours(span.Hours).AddMinutes(span.Minutes).AddSeconds(span.Seconds);
                 duration = span.Hours + "h " + span.Minutes + "m " + span.Seconds + "s";
 
-               // lblEndTime.Text = String.Format("{0}:{1}:{2}", endTime.Hour, endTime.Minute, endTime.Second);
-               // lblEndTime.Text = duration;
-               // pnlDuration.Visible = true;
+                // lblEndTime.Text = String.Format("{0}:{1}:{2}", endTime.Hour, endTime.Minute, endTime.Second);
+                // lblEndTime.Text = duration;
+                // pnlDuration.Visible = true;
             }
         }
 
         private void SetAspectRatio(IMDBMovie movie)
         {
-           SetPosterConttrol(pboxAspectRatio, movie.AspectRatio, "AspectRatios", AspectRatioImage, "Aspect ratio");
+            SetPosterConttrol(pboxAspectRatio, movie.AspectRatio, "AspectRatios", AspectRatioImage, "Aspect ratio");
         }
 
         private void SetReleaseDate(IMDBMovie movie)
@@ -458,15 +506,17 @@ namespace CinemaPosterApp
             }
             else if (movie.Year != null && movie.Year.Length > 0)
             {
-               this.lblReleaseDate.Text = movie.Year;
+                lblReleaseDate.Visible = true;
+                this.lblReleaseDate.Text = movie.Year;
             }
             else
             {
                 this.lblReleaseDate.Text = "";
+                lblReleaseDate.Visible = false;
             }
         }
 
-        private void SetPosterConttrol(PictureBox pboxImage, string ctrlValue, string dir, Bitmap bImage, string errorName ="")
+        private void SetPosterConttrol(PictureBox pboxImage, string ctrlValue, string dir, Bitmap bImage, string errorName = "")
         {
             pboxImage.Visible = false;
             if (ctrlValue == null || ctrlValue.Length == 0)
@@ -505,8 +555,9 @@ namespace CinemaPosterApp
 
         }
 
-        private void SetPlot(IMDBMovie movie)
-        {
+
+        public void SetPlot(IMDBMovie movie) {
+
             if (movie.Plot != null && movie.Plot.Length > 0)
             {
                 xPos = lblPlot.Location.X;
@@ -516,14 +567,14 @@ namespace CinemaPosterApp
                 {
                     MarqueePlotTimer.Start();
                 }
-               
-                pnlPlot.Visible = true;
+
+                lblPlot.Visible = true;
                 lblPlot.Text = movie.Plot;
             }
             else
             {
                 lblPlot.Text = "";
-                pnlPlot.Visible = false;
+                lblPlot.Visible = false;
             }
         }
 
@@ -531,10 +582,11 @@ namespace CinemaPosterApp
         {
             try
             {
-                BeginInvoke((Action)delegate () {
+                BeginInvoke((Action)delegate ()
+                {
                     if (lblPlot.Text.Length > 547)
                     {
-                        if (YPos <= -this.pnlPlot.Height - 50)
+                        if (YPos <= -this.lblPlot.Height - 50)
                         {
                             this.lblPlot.Location = new System.Drawing.Point(xPos, 0);
                             YPos = 0;
@@ -561,11 +613,13 @@ namespace CinemaPosterApp
         {
             if (movie.Tagline != null && movie.Tagline.Length > 0)
             {
+                lblTagline.Visible = true;
                 lblTagline.Text = movie.Tagline;
             }
             else
             {
                 lblTagline.Text = "";
+                lblTagline.Visible = false;
             }
         }
 

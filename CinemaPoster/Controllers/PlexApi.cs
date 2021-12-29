@@ -114,10 +114,21 @@ namespace CinemaPosterApp
                                                 }
                                                 else if (codec.Contains("English"))
                                                 {
-                                                    var acodec = codec.Replace("English (", "").Replace(")", "");
-                                                    acodec = acodec.Replace(":", "").Trim();
-                                                    acodec = acodec.Replace(" ", "_");
-                                                    mtech.audioCodec = acodec;
+
+                                                    if (codec.Contains("Surround 5.1 (English DTS-HD MA)"))
+                                                    {
+                                                        mtech.audioCodec = "DTS-HD_MA_5.1";
+                                                    }
+                                                    else if (codec.Contains("Surround 7.1 (English DTS-HD MA)"))
+                                                    {
+                                                        mtech.audioCodec = "DTS-HD_MA_7.1";
+                                                    }
+                                                    else { 
+                                                        var acodec = codec.Replace("(English", "").Replace(")", "");
+                                                        acodec = acodec.Replace(":", "").Trim();
+                                                        acodec = acodec.Replace(" ", "_");
+                                                        mtech.audioCodec = acodec;
+                                                    }
                                                 }
                                                 break;
                                         }
