@@ -22,6 +22,7 @@ namespace CinemaPoster.Controllers
     {
 
         private Form form;
+        public static string API_KEY = "16dc3a0c";
 
         public OmdbApi()
         {
@@ -32,35 +33,33 @@ namespace CinemaPoster.Controllers
             form = formMain;
         }
 
-        public async Task<IMDBMovie> GetMovieAsync(string title, bool wantsPlot, string datatype = "json")
+        public async Task GetMovieAsync(IMDBMovie movie, bool wantsPlot)
         {
-            IMDBMovie movie = new IMDBMovie();
             var url = "";
             if (wantsPlot)
             {
-                url = String.Format("http://omdbapi.com?apikey=16dc3a0c&t={0}&r={1}&plot=full", title, datatype);
+                url = String.Format("http://omdbapi.com?apikey={2}&t={0}&r={1}&plot=full", movie.Title, "xml", OmdbApi.API_KEY);
             }
             else
             {
-                url = String.Format("http://omdbapi.com?apikey=16dc3a0c&t={0}&r={1}", title, datatype);
+                url = String.Format("http://omdbapi.com?apikey={2}&t={0}&r={1}", movie.Title, "xml", OmdbApi.API_KEY);
             }
-
-            if (datatype == "xml")
-            {
-                movie = GetXmlMovie(url);
-            }
-            else
-            {
-                movie = await GetJsonMovieAsync(url);
-            }
-
-            return movie;
+            await GetJsonMovieAsync(url, movie);
         }
 
-        public async Task<IMDBMovie> GetJsonMovieAsync(String url)
-        {
-            IMDBMovie movie = new IMDBMovie();
 
+        public void GetPoster(IMDBMovie movie)
+        {
+            var url = String.Format("http://img.omdbapi.com/?apikey={1}&i={0}&h=1920", movie.Id, OmdbApi.API_KEY);
+            using (WebClient client = new WebClient())
+            {
+                client.DownloadFileAsync(new Uri(url), movie.LocalImage);                
+
+            }
+        }
+
+        public async Task<IMDBMovie> GetJsonMovieAsync(String url, IMDBMovie movie)
+        {
             var client = new HttpClient();
             var request = new HttpRequestMessage
             {
@@ -74,8 +73,23 @@ namespace CinemaPoster.Controllers
                 {
                     response.EnsureSuccessStatusCode();
                     var body = await response.Content.ReadAsStringAsync();
-                    Newtonsoft.Json.Linq.JToken token = Newtonsoft.Json.Linq.JToken.Parse(body);
-                    movie = token.ToObject<IMDBMovie>();
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(body);
+                    var nodes = xmlDoc.SelectNodes("root/movie");
+                    foreach (XmlNode childrenNode in nodes)
+                    {
+                        movie.Id = childrenNode.Attributes["imdbID"].Value;
+                        if(movie.Title == null || movie.Title.Length == 0)
+                        {
+                            movie.Title = childrenNode.Attributes["title"].Value;
+                        }
+
+                             
+                        movie.Poster =  String.Format("http://img.omdbapi.com/?apikey={1}c&i={0}&h=1920", movie.Id, OmdbApi.API_KEY);
+                        movie.Image = movie.Poster;
+                        GetPoster(movie);
+                        break;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -99,6 +113,9 @@ namespace CinemaPoster.Controllers
                     { // Read the attributes.
                         switch (reader.Name)
                         {
+                            case "imdbID":
+                                movie.Id = reader.Value;
+                                break;
                             case "title":
                                 movie.Title = reader.Value;
                                 break;
@@ -106,40 +123,64 @@ namespace CinemaPoster.Controllers
                                 movie.Year = reader.Value;
                                 break;
                             case "rated":
-                                movie.Rated = reader.Value;
+                                movie.ContentRating = reader.Value;
                                 break;
                             case "released":
-                                movie.Released = reader.Value;
+                                movie.ReleaseDate = reader.Value;
                                 break;
-                            case "tuntime":
-                                movie.Runtime = reader.Value;
+                            case "runtime":
+                                movie.RuntimeMins = reader.Value;
                                 break;
-                            case "henre":
-                                movie.Genre = reader.Value;
+                            case "genre":
+                                movie.Genres = reader.Value;
                                 break;
                             case "director":
-                                movie.Director = reader.Value;
+                                movie.Directors = reader.Value;
                                 break;
                             case "plot":
                                 movie.Plot = reader.Value;
                                 break;
                             case "poster":
                                 movie.Poster = reader.Value;
+                                movie.Image = reader.Value;
                                 break;
                             case "metaScore":
-                                movie.MetaScore = reader.Value;
+                                movie.MetacriticRating = reader.Value;
                                 break;
                             case "imdbRating":
-                                movie.imdbRating = reader.Value;
-                                break;
-                            case "imdbID":
-                                movie.imdbID = reader.Value;
+                                movie.IMDbRating = reader.Value;
                                 break;
                         }
                     }
                 }
             }
             return movie;
+        }
+
+
+
+        public String GetMoviePosterUrl(String url)
+        {
+            var PosterUrl = "";
+
+            XmlTextReader reader = new XmlTextReader(url);
+
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "movie")
+                {
+                    while (reader.MoveToNextAttribute())
+                    { // Read the attributes.
+                        switch (reader.Name)
+                        {
+                            case "poster":
+                                PosterUrl = reader.Value;
+                                break;
+                        }
+                    }
+                }
+            }
+            return PosterUrl;
         }
     }
 }

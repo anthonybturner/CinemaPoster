@@ -1,12 +1,18 @@
 ﻿using CinemaPosterApp.MovieTypes;
 using CinemaPosterApp.Utilities;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace CinemaPosterApp
 {
     public class PlexApi
     {
+
+
         public static MovieTechnical GetNowPlayingInfo(Uri appPlexURL, bool isPlaying)
         {
             MovieTechnical mtech = new MovieTechnical();
@@ -123,8 +129,12 @@ namespace CinemaPosterApp
                                                     {
                                                         mtech.audioCodec = "DTS-HD_MA_7.1";
                                                     }
-                                                    else { 
-                                                        var acodec = codec.Replace("(English", "").Replace(")", "");
+                                                    else if (codec.Contains("EAC3_5.1"))
+                                                    {
+                                                        mtech.audioCodec = "EAC3_5.1";
+                                                    }
+                                                    else {
+                                                        var acodec = codec.Substring(codec.IndexOf("(")).Replace("(", "").Replace(")", "");
                                                         acodec = acodec.Replace(":", "").Trim();
                                                         acodec = acodec.Replace(" ", "_");
                                                         mtech.audioCodec = acodec;

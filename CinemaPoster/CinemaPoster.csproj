@@ -78,6 +78,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -90,8 +91,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\IMDBApi.cs" />
+    <Compile Include="Controllers\NowPlaying.cs" />
     <Compile Include="Controllers\OmdbApi.cs" />
-    <Compile Include="Controllers\OmdbAPiBackup.cs" />
+    <Compile Include="Controllers\PoserOld.cs" />
+    <Compile Include="Interfaces\INowPlaying.cs" />
+    <Compile Include="Models\ActorShort.cs" />
     <Compile Include="Models\ComingSoonMovie.cs" />
     <Compile Include="Controllers\ImdbFetcher.cs" />
     <Compile Include="Controls\CustomTextBox.cs">
@@ -101,6 +106,7 @@
       <DependentUpon>CustomTextBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\PosterData.cs" />
+    <Compile Include="Models\TitleDataCustom.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -127,6 +133,7 @@
     </Compile>
     <Compile Include="Utilities\Brightness.cs" />
     <Compile Include="Utilities\Downloader.cs" />
+    <Compile Include="Utilities\FileNameParser.cs" />
     <Compile Include="Utilities\FullScreen.cs" />
     <Compile Include="Utilities\HtmlParser.cs" />
     <Compile Include="Utilities\Logger.cs" />
@@ -291,7 +298,6 @@
     <EmbeddedResource Include="Images\defaultcontentrating.png" />
     <EmbeddedResource Include="Images\defaultscreen.png" />
     <EmbeddedResource Include="Images\defaultsource.png" />
-    <EmbeddedResource Include="Images\House_of_Gucci.jpg" />
     <EmbeddedResource Include="Images\png-clipart-film-video-frame-video-borders-black-and-white.png" />
   </ItemGroup>
   <ItemGroup>
@@ -304,5 +310,9 @@
     <EmbeddedResource Include="Images\AudioCodecs\dtsx.png" />
     <EmbeddedResource Include="Images\AudioCodecs\DTSX_7.1.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\AudienceRating\stars.png" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

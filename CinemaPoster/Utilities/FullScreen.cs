@@ -27,9 +27,9 @@ namespace CinemaPosterApp.Utilities
                 TargetForm.ShowSettings();
             }
 
-            if (e.KeyData == Keys.N && !TargetForm.NowPlaying)
+            if (e.KeyData == Keys.N && !TargetForm.NowPlaying.IsPlaying())
             {
-               TargetForm.GetPosterAsync();
+               //TargetForm.GetPosterAsync();
             }
         }
 

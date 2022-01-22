@@ -12,79 +12,69 @@ using System.Threading.Tasks;
 using IMDbApiLib.Models;
 using CinemaPoster.Utilities;
 using CinemaPoster.Controllers;
+using CinemaPoster.Models;
 
 namespace CinemaPosterApp.Controllers
 {
     class ImdbFetcher
     {
-        private static void CreateTitle(TitleData IMDBMovie, IMDBMovie movie)
+       private ApiLib apiLib { get; set; }
+
+        public ImdbFetcher()
         {
-            movie.Title = IMDBMovie.Title;
-            movie.FullTitle = IMDBMovie.FullTitle;
-            movie.Year = IMDBMovie.Year;
-            movie.Image = "";
-            movie.Runtime = IMDBMovie.RuntimeMins;
-            movie.RuntimeStr = IMDBMovie.RuntimeStr;
-            movie.Plot = IMDBMovie.Plot;
-            movie.Rated = IMDBMovie.ContentRating;
-            movie.imdbRating = IMDBMovie.IMDbRating;
-            movie.MetacriticRating = IMDBMovie.MetacriticRating;
-            movie.Genres = IMDBMovie.Genres;
-            movie.Director = IMDBMovie.Directors;
-            movie.Actors = IMDBMovie.Stars;
-            movie.Id = IMDBMovie.Id;
-            var MaxCasts = 5;
-            if (IMDBMovie.ActorList != null)
-            {
-                for (var i = 0; i < IMDBMovie.ActorList.Count; i++)
-                {
-                    if (i > MaxCasts) break;
-                    var actor = IMDBMovie.ActorList[i];
-                    movie.Cast[i] = new IMDBMovie.TopCast();
-                    movie.Cast[i].CharacterName = actor.AsCharacter;
-                    movie.Cast[i].ActorName = actor.Name;
-                    movie.Cast[i].ActorImage = actor.Image;
-                }
-            }
+            apiLib = new ApiLib("k_u215r302");
         }
 
-        public static async Task<IMDBMovie> FetchMovieAsync(string mtitle, MovieTechnical mtech)
+        public async Task<IMDBMovie> FetchMovieAsync(string mtitle, MovieTechnical mtech)
         {
-            IMDBMovie movie = await Task.Run(() => ImdbFetcher.DownloadMovieAsync(mtitle));
+            IMDBMovie movie = await Task.Run(() => DownloadMovieAsync(mtitle));
+
+            if(movie == null)
+            {
+                return null;
+            }
+
             movie.AspectRatio = mtech.aspectRatio;
             movie.Tagline = movie.Tagline;
-            movie.duration = mtech.duration;
-            movie.Rated = mtech.contentRating;
-            movie.AudienceRatingImage = mtech.audienceRatingImage;
-            movie.AudienceRating = mtech.audienceRating;
             movie.VideoResolution = mtech.videoResolution;
             movie.videoFrameRate = mtech.videoFrameRate;
             movie.AudioCodec = mtech.audioCodec;
             movie.VideoCodec = mtech.videoCodec;
             movie.Hdr = mtech.hdr;
-
-            await Task.Run(() => ImdbFetcher.SaveMovie(movie, new Serializer(), new ApiLib("k_u215r302")));
-            if (movie.Title == null)
+            if(movie.Title == null || movie.Title.Length == 0)
             {
                 movie.Title = mtitle;
             }
+            if (movie.Tagline == null || movie.Tagline.Length == 0)
+            {
+                movie.Tagline = mtech.tagline;
+            }
+            await Task.Run(() => SaveMovie(movie, new Serializer(), apiLib));
+          
             return movie;
         }
 
-        public static async Task FetchNewMoviesAsync(PostersDB.Poster.SaveMovieCompleted callback)
+        public async Task<List<IMDBMovie>> FetchNewMoviesAsync()
         {
             List<IMDBMovie> TempMovies = new List<IMDBMovie>();
-            List<IMDBMovie> pmMovies = await Task.Run(() => ImdbFetcher.DownloadMostPopularMoviesAsync());
-            List<IMDBMovie> csMovies = await Task.Run(() => ImdbFetcher.DownloadComingSoonMoviesAsync());
+            List<IMDBMovie> pmMovies = await Task.Run(() => DownloadMostPopularMoviesAsync());
+            List<IMDBMovie> csMovies = await Task.Run(() => DownloadComingSoonMoviesAsync());
+           
             TempMovies.AddRange(pmMovies);
             TempMovies.AddRange(csMovies);
-            await Task.Run(() => ImdbFetcher.SaveMovies(TempMovies, callback));
+            Serializer ser = new Serializer();
+            for (var i = 0; i < TempMovies.Count; i++)
+            {
+                IMDBMovie movie = TempMovies[i];
+                ser.SerializeObject(movie, movie.Title);
+               // callback(movie, i + 1);
+            }
+            return TempMovies;
         }
 
-        public static async Task<IMDBMovie> DownloadMovieAsync(string title)
+        public async Task<IMDBMovie> DownloadMovieAsync(string title)
         {
             IMDBMovie movie = new IMDBMovie();
-            var apiLib = new ApiLib("k_u215r302");
             IMDbApiLib.Models.SearchData data = await apiLib.SearchMovieAsync(title.Replace("/", " "));
             if (data != null && data.Results != null)
             {
@@ -92,62 +82,128 @@ namespace CinemaPosterApp.Controllers
                 {
                     var IMDBMovie = await apiLib.TitleAsync(x.Id, Language.en, true, false, false, true, false, false, true);
                     if (IMDBMovie.Title == null || IMDBMovie.FullTitle == null) continue;
-                    CreateTitle(IMDBMovie, movie);
+
+                    movie = await CreateMovie(x.Id, "");
                     break;
                 }
             }
+            else{//Try getting basic poster info from another api
+                OmdbApi api = new OmdbApi();
+               // movie = await api.GetMovieAsync(title, false, "xml");
+               // movie = await api.GetPosterAsync(movie.Id, false, "xml");
+                await CreateMovie(movie.Id, title);
+            }
             return movie;
         }
+        private async Task<IMDBMovie> CreateMovie(String Id, string title)
+        {
+            IMDBMovie Movie = new IMDBMovie();
+            var directory = @"..\actors\";
+            var filename = "";
+            var saveLocation = "";
 
-        public static async Task<List<IMDBMovie>> DownloadComingSoonMoviesAsync()
+            if (Id != null && Id.Length > 0)
+            {
+                TitleData mMovie = await apiLib.TitleAsync(Id, Language.en, true, false, false, true, false, false, true);
+                for (var i = 0; i < mMovie.ActorList.Count; i++)
+                {
+                    var x = mMovie.ActorList[i];
+                    filename = x.Name.Replace(" ", "_").Trim().ToLower() + ".jpg";
+                    saveLocation = directory + filename;
+                    Movie.ActorLocalImages.Add(saveLocation);
+                }
+
+                Movie.ContentRating = mMovie.ContentRating;
+                Movie.FullTitle = mMovie.FullTitle;
+                Movie.Genres = mMovie.Genres;
+                Movie.Image = mMovie.Image;
+                Movie.Images = mMovie.Images;
+                Movie.IMDbRating = mMovie.IMDbRating;
+                Movie.IMDbRatingVotes = mMovie.IMDbRatingVotes;
+                Movie.MetacriticRating = mMovie.MetacriticRating;
+                Movie.OriginalTitle = mMovie.OriginalTitle;
+                Movie.Plot = mMovie.Plot;
+                Movie.PlotLocal = mMovie.PlotLocal;
+                Movie.Posters = mMovie.Posters;
+                Movie.Ratings = mMovie.Ratings;
+                Movie.ReleaseDate = mMovie.ReleaseDate;
+                Movie.RuntimeMins = mMovie.RuntimeMins;
+                Movie.RuntimeStr = mMovie.RuntimeStr;
+                Movie.StarList = mMovie.StarList;
+                Movie.Stars = mMovie.Stars;
+                Movie.Tagline = mMovie.Tagline;
+                Movie.Title = mMovie.Title;
+                Movie.Year = mMovie.Year;
+                Movie.Awards = mMovie.Awards;
+                Movie.BoxOffice = mMovie.BoxOffice;
+                Movie.ActorList = mMovie.ActorList;
+
+            }else
+            {
+                Movie.Title = title;
+            }
+           
+            directory = System.IO.Directory.GetCurrentDirectory() + @"\images\";
+            filename = Movie.Title.Replace(": ", "_").Replace("/", "_");
+            filename = filename.Replace(" ", "_") + ".jpg";
+            saveLocation = directory + filename;
+            Movie.LocalImage = saveLocation;
+           // CreatePosterImageLinks(Movie);
+            return Movie;
+        }
+
+        public async Task<List<IMDBMovie>> DownloadComingSoonMoviesAsync()
         {
             List<IMDBMovie> movies = new List<IMDBMovie>();
-            var apiLib = new ApiLib("k_u215r302");
             var data = await apiLib.ComingSoonAsync();
             foreach (IMDbApiLib.Models.NewMovieDataDetail x in data.Items)
             {
-                IMDBMovie movie = new IMDBMovie();
-                var IMDBMovie = await apiLib.TitleAsync(x.Id, Language.en, true, false, false, true, false, false, true);
-                CreateTitle(IMDBMovie, movie);
-                movie.MovieTense = "COMING SOON";
-                movie.ReleaseState = x.ReleaseState;
-                movie.ImdbRatingCount = x.IMDbRatingCount;
-                movies.Add(movie);
+                var Movie = await CreateMovie(x.Id, "");
+                movies.Add(Movie);
             }
             return movies;
         }
 
-        public static async Task<List<IMDBMovie>> DownloadMostPopularMoviesAsync()
+        public async Task<List<IMDBMovie>> DownloadMostPopularMoviesAsync()
         {
             List<IMDBMovie> movies = new List<IMDBMovie>();
-            var apiLib = new ApiLib("k_u215r302");
             var data = await apiLib.MostPopularMoviesAsync();
-            OmdbApi OmdbApi = new OmdbApi();
-            IMDBMovie movie;
             foreach (IMDbApiLib.Models.MostPopularDataDetail x in data.Items)
             {
-                
-                var IMDBMovie = await apiLib.TitleAsync(x.Id, Language.en, true, false, false, true, false, false, true);
-                movie = new IMDBMovie();
-                CreateTitle(IMDBMovie, movie);
-                movie.MovieTense = "Theaters Now";
-                movie.Id = x.Id;
-                movie.Title = x.Title;
-                movie.FullTitle = x.FullTitle;
-                movie.Year = x.Year;
-                movie.Image = "";
-                movie.AudienceRating = x.IMDbRating;
-                movie.imdbRating = x.IMDbRating;
-                movie.ImdbRatingCount = x.IMDbRatingCount;
-               
-                IMDBMovie m = await Task.Run(() => OmdbApi.GetMovieAsync(movie.Title, false, "xml"));
-                movie.Rated = m.Rated;
-                movies.Add(movie);
+                var Movie = await CreateMovie(x.Id, "");
+                movies.Add(Movie);
             }
             return movies;
         }
 
-        public static async Task<List<IMDBMovie>> FetchTechSpecs(IMDBMovie movie)
+        private static void CreatePosterImageLinks(IMDBMovie movie)
+        {
+            string directory = System.IO.Directory.GetCurrentDirectory() + @"\images\";
+            string filename = movie.Title.Replace(": ", "_").Replace("/", "_");
+            filename = filename.Replace(" ", "_") + ".jpg";
+
+            PosterDataItem wantedPoster = null;
+            foreach (var poster in movie.Posters.Posters)
+            {
+                if (wantedPoster == null)
+                {
+                    wantedPoster = poster;
+                    continue;
+                }
+                if (poster.Height > wantedPoster.Height && poster.Width >= 1440 && poster.Height <= 2100 && poster.Height >= 1080)
+                {
+                    wantedPoster = poster;
+                }
+            }
+
+            if (wantedPoster != null)
+            {
+                var url = wantedPoster.Link;
+                movie.Image = url;
+            }
+        }
+
+        public  async Task<List<IMDBMovie>> FetchTechSpecs(IMDBMovie movie)
         {
             List<IMDBMovie> movies = new List<IMDBMovie>();
             var client = new HttpClient();
@@ -168,7 +224,7 @@ namespace CinemaPosterApp.Controllers
                     response.EnsureSuccessStatusCode();
                     var body = await response.Content.ReadAsStringAsync();
                     Newtonsoft.Json.Linq.JToken token = Newtonsoft.Json.Linq.JToken.Parse(body);
-                    movie.TechSpecs = token.ToObject<MovieTechnical>();
+                  //  movie.TechSpecs = token.ToObject<MovieTechnical>();
                 }
                 catch (Exception ex)
                 {
@@ -179,15 +235,12 @@ namespace CinemaPosterApp.Controllers
             return movies;
         }
 
-        public static async Task SaveMovie(IMDBMovie movie, Serializer ser, ApiLib apiLib)
+        public void SaveMovie(IMDBMovie movie, Serializer ser, ApiLib apiLib)
         {
-           
-            await DownloadPosterAsync(movie, apiLib);
-            await DownloadActorsAsync(movie, apiLib);
             ser.SerializeObject<IMDBMovie>(movie, movie.Title);
         }
 
-        private static async Task DownloadPosterAsync(IMDBMovie movie, ApiLib apiLib)
+        private void DownloadPoster(IMDBMovie movie)
         {
             string directory = System.IO.Directory.GetCurrentDirectory() + @"\images\";
             string filename = movie.Title.Replace(": ", "_").Replace("/", "_");
@@ -198,9 +251,8 @@ namespace CinemaPosterApp.Controllers
             movie.Image = saveLocation;
             if (!File.Exists(saveLocation))
             {
-                var data = await apiLib.PostersAsync(movie.Id);
                 PosterDataItem wantedPoster = null;
-                foreach (var x in data.Posters)
+                foreach (var x in movie.Posters.Posters)
                 {
                     if (wantedPoster == null)
                     {
@@ -253,37 +305,9 @@ namespace CinemaPosterApp.Controllers
                 }
             }            
         }
-        private static async Task DownloadActorsAsync(IMDBMovie movie, ApiLib apiLib)
+        private  async Task DownloadActorsAsync(IMDBMovie movie, ApiLib apiLib)
         {
-            string dir = System.IO.Directory.GetCurrentDirectory() + @"\actors\";
-            var casts = (from x in movie.Cast  where x != null select x).ToList();
-           // Downloader dl = new Downloader();
-            foreach (var cast in casts)
-            {
-                var filename = cast.ActorName.Replace(": ", "_").Replace("/", "_");
-                filename = filename.Replace(" ", "_") + ".jpg";
-                string saveLocation = dir + filename;
-                cast.ActorLocalImage = saveLocation;
-              
-                //if (!File.Exists(saveLocation))//Check if Actor data exists already
-                //{
-                //    var url = cast.ActorImage;
-                //     Task.Run(async () => await dl.Download(url, saveLocation)).Wait();
-                //}-
-            } 
-        }
-
-        public static async Task SaveMovies(List<IMDBMovie> movies, PostersDB.Poster.SaveMovieCompleted callback)
-        {
-            Serializer ser = new Serializer();
-
-            var apiLib = new ApiLib("k_u215r302");
-            for (var i = 0; i < movies.Count; i++)
-            {
-                IMDBMovie movie = movies[i];
-                await SaveMovie(movie, ser, apiLib);
-                callback(movie, i+1);
-            }
+           
         }
     }
 }

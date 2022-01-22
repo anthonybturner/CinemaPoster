@@ -1,104 +1,99 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using System.Threading.Tasks;
 using System.IO;
-using System.Net;
-using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
-using IMDbApiLib;
+
 using CinemaPosterApp.MovieTypes;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
+
 using CinemaPosterApp.Controllers;
 using CinemaPosterApp.Utilities;
-using CinemaPoster.Controllers;
+using System.Timers;
 
 namespace CinemaPosterApp.PostersDB
 {
     public class Poster
     {
-        public delegate void SaveMovieCompleted(IMDBMovie movie, Int32 index);
+        private System.Timers.Timer PosterTimer { get; set; }
+        public PosterChangeDelegate PosterChangeDel { get; set; }
+        public List<IMDBMovie> movies { get; set; }
 
+        private List<ComingSoonMovie> fetchedMovies { get;  set; }
 
-        private List<IMDBMovie> movies;
-        private List<ComingSoonMovie> fetchedMovies;
-        private CinemaForm mainForm;
-        private ImdbFetcher fetcher;
+        private ImdbFetcher fetcher { get; set; }
 
-        public string LogDirectory { get; private set; }
-        public string XMLDirectory { get; private set; }
-        public string ImageDirecgtory { get; private set; }
-        public string ActorsDirectory { get; private set; }
+        public delegate void PosterChangeDelegate(IMDBMovie n);
+
+        public delegate void PostersCompleteDelegate(List<IMDBMovie> MoviesList);
+        public PostersCompleteDelegate PostersCompletedDel { get; internal set; }
 
         public Poster()
         {
+          
             movies = new List<IMDBMovie>();
             fetchedMovies = new List<ComingSoonMovie>();
             fetcher = new ImdbFetcher();
-            CreateDirectories();
-        }
-
-        public Poster(CinemaForm form)
-        {
-            mainForm = form;
-            movies = new List<IMDBMovie>();
-            fetchedMovies = new List<ComingSoonMovie>();
-            fetcher = new ImdbFetcher();
-            CreateDirectories();
+            CreateDirectories();            
+            InitPosterTimer();
+        
         }
 
         private void CreateDirectories()
         {
-            LogDirectory = System.IO.Directory.GetCurrentDirectory() + @"\logs\";
-            if (!Directory.Exists(LogDirectory))
+            if (!Directory.Exists(CinemaForm.LogDirectory))
             {  // if it doesn't exist, create
-                Directory.CreateDirectory(LogDirectory);
+                Directory.CreateDirectory(CinemaForm.LogDirectory);
             }
-            XMLDirectory = System.IO.Directory.GetCurrentDirectory() + @"\xml\";
-            if (!Directory.Exists(XMLDirectory))
+           
+            if (!Directory.Exists(CinemaForm.XMLDirectory))
             {  // if it doesn't exist, create
-                Directory.CreateDirectory(XMLDirectory);
+                Directory.CreateDirectory(CinemaForm.XMLDirectory);
             }
-            ImageDirecgtory = System.IO.Directory.GetCurrentDirectory() + @"\images\";
-            if (!Directory.Exists(ImageDirecgtory))
+           
+            if (!Directory.Exists(CinemaForm.ImageDirectory))
             {  // if it doesn't exist, create
-                Directory.CreateDirectory(ImageDirecgtory);
+                Directory.CreateDirectory(CinemaForm.ImageDirectory);
             }
-            ActorsDirectory = System.IO.Directory.GetCurrentDirectory() + @"\actors\";
-            if (!Directory.Exists(ActorsDirectory))
+           
+            if (!Directory.Exists(CinemaForm.ActorsDirectory))
             {  // if it doesn't exist, create
-                Directory.CreateDirectory(ActorsDirectory);
+                Directory.CreateDirectory(CinemaForm.ActorsDirectory);
             }
         }
 
         public async Task InitPostersAsync()
         {
             string[] MovieXMLList;
-            MovieXMLList = Directory.GetFiles(XMLDirectory, "*.xml", SearchOption.AllDirectories);
-            if (MovieXMLList != null && MovieXMLList.Length > 0)
-            {
-                PopulatePosters(MovieXMLList);
+            MovieXMLList = Directory.GetFiles(CinemaForm.XMLDirectory, "*.xml", SearchOption.AllDirectories);
+            if (MovieXMLList == null || MovieXMLList.Length == 0)
+            {//Fetch movies from remote api
+              movies = await CinemaPoster.Controllers.IMDBApi.GetMoviesInfoAsync();
             }
             else
             {
-                SaveMovieCompleted callback = OnMovieSaved;
-                await ImdbFetcher.FetchNewMoviesAsync(callback);
+              PopulatePosters(MovieXMLList);
             }
         }
 
-        public void OnMovieSaved(IMDBMovie movie, Int32 count)
+        private void InitPosterTimer()
         {
-
-            movies.Add(movie);
-            if (mainForm != null && count == 1)
-            {
-                mainForm.SetInitialPoster(movie);
-            }
+            PosterTimer = new System.Timers.Timer();
+            PosterTimer.Elapsed += new System.Timers.ElapsedEventHandler(HandlePosterChangevent);
+            PosterTimer.Interval = 30000;//TimeSpan.FromMinutes(1).TotalMilliseconds;
+        }
+        private void StartTimer()
+        {
+            PosterTimer.Enabled = true;
+            PosterTimer.Start();
         }
 
+        private void StopTimer()
+        {
+            PosterTimer.Enabled = false;
+            PosterTimer.Stop();
+        }
         private void PopulatePosters(String[] files)
         {
             Serializer sr = new Serializer();
@@ -106,11 +101,26 @@ namespace CinemaPosterApp.PostersDB
             {
                 if (Regex.IsMatch(filename, @"\.xml$"))
                 {
-                    IMDBMovie m = sr.DeSerializeObject<IMDBMovie>(String.Format(filename));
+                    IMDBMovie m = (IMDBMovie)sr.DeSerializeObject<IMDBMovie>(String.Format(filename));
                     movies.Add(m);
                 }
             }
-            mainForm.SetInitialPoster(GetRandomPoster());
+            if(PostersCompletedDel != null)
+            {
+                PostersCompletedDel.Invoke(movies);
+            }
+        }
+
+        private void HandlePosterChangevent(object sender, ElapsedEventArgs e)
+        {
+            if (PosterChangeDel != null)
+            {
+                IMDBMovie movie = GetRandomPoster();
+                if (movie != null)
+                {
+                    PosterChangeDel.Invoke(movie);
+                }
+            }
         }
 
         public IMDBMovie GetRandomPoster()
@@ -120,34 +130,15 @@ namespace CinemaPosterApp.PostersDB
             int next = r.Next(movies.Count);
             return movies[next];
         }
-
-        public void RemovePosters()
+        public void StartPosters()
         {
-            string directory = System.IO.Directory.GetCurrentDirectory() + @"\xml\";
-            System.IO.DirectoryInfo di = new DirectoryInfo(directory);
-            int DelayOnRetry = 1000;
-            int NumberOfRetries = 3;
-
-            foreach (FileInfo fileinfo in di.GetFiles())
-            {
-                for (int i = 1; i <= NumberOfRetries; ++i)
-                {
-                    try
-                    {
-                        fileinfo.Delete();
-                        break; // When done we can break loop
-                    }
-                    catch (IOException e) when (i <= NumberOfRetries)
-                    {
-                        Logger.WriteLog(e.Message, e.ToString());
-                        Thread.Sleep(DelayOnRetry);
-                    }
-                }
-            }
-            movies = new List<IMDBMovie>();
+              StartTimer();
         }
-
-       
+        public void StopPosters()
+        {
+            StopTimer();
+           
+        }
     }
 }
 

@@ -18,7 +18,6 @@ namespace CinemaPosterApp
             InitializeComponent();
             mainForm = f;
 
-            numericUpDown1.Value = CinemaForm.MAX_MOVIES;
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
@@ -26,7 +25,7 @@ namespace CinemaPosterApp
             if (numericUpDown1.Value > 0)
             {
               //  CinemaForm.MAX_MOVIES = ((int)numericUpDown1.Value);
-                mainForm.RestartPosters();
+               // mainForm.RestartPosters();
             }
             this.Close();
         }

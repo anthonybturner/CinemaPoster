@@ -1,4 +1,5 @@
-﻿using CinemaPosterApp.Utilities;
+﻿using CinemaPoster.Utilities;
+using CinemaPosterApp.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,11 +22,7 @@ namespace CinemaPosterApp.MovieTypes
         public void SerializeObject<T>(T serializableObject, string title)
         {
             if (serializableObject == null) { return; }
-
-            string directory = System.IO.Directory.GetCurrentDirectory() + @"\xml\";
-            string filename = title.Replace(": ", "_").Replace("/", "_");
-            filename = filename.Replace(" ", "_") + ".xml";
-            string saveLocation = directory + filename;
+            string saveLocation = FileNameParser.CreateXmlDirectory(title);
             try
             {
                 XmlDocument xmlDocument = new XmlDocument();
