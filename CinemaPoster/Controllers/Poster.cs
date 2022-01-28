@@ -42,24 +42,21 @@ namespace PostersDB
             {  // if it doesn't exist, create
                 Directory.CreateDirectory(CinemaForm.LogDirectory);
             }
-           
-            if (!Directory.Exists(CinemaForm.XMLDirectory))
-            {  // if it doesn't exist, create
-                Directory.CreateDirectory(CinemaForm.XMLDirectory);
-            }
-           
-            if (!Directory.Exists(CinemaForm.ImageDirectory))
-            {  // if it doesn't exist, create
-                Directory.CreateDirectory(CinemaForm.ImageDirectory);
-            }
-           
-            if (!Directory.Exists(CinemaForm.ActorsDirectory))
-            {  // if it doesn't exist, create
-                Directory.CreateDirectory(CinemaForm.ActorsDirectory);
-            }
-            if (!Directory.Exists(CinemaForm.JsonDirectory))
-            {  // if it doesn't exist, create
-                Directory.CreateDirectory(CinemaForm.JsonDirectory);
+            if (!form.IsUsingRemote)
+            {//TODO in settings when set to true, call this function to create directories
+                if (!Directory.Exists(CinemaForm.ImageDirectory))
+                {  // if it doesn't exist, create
+                    Directory.CreateDirectory(CinemaForm.ImageDirectory);
+                }
+
+                if (!Directory.Exists(CinemaForm.ActorsDirectory))
+                {  // if it doesn't exist, create
+                    Directory.CreateDirectory(CinemaForm.ActorsDirectory);
+                }
+                if (!Directory.Exists(CinemaForm.JsonDirectory))
+                {  // if it doesn't exist, create
+                    Directory.CreateDirectory(CinemaForm.JsonDirectory);
+                }
             }
         }
 
