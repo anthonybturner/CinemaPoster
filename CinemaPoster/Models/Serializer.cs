@@ -1,15 +1,10 @@
-﻿using CinemaPoster.Utilities;
-using CinemaPosterApp.Utilities;
+﻿using CinemaPosterApp.Utilities;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace CinemaPosterApp.MovieTypes
+namespace MovieTypes
 {
     class Serializer
     {
@@ -22,7 +17,7 @@ namespace CinemaPosterApp.MovieTypes
         public void SerializeObject<T>(T serializableObject, string title)
         {
             if (serializableObject == null) { return; }
-            string saveLocation = FileNameParser.CreateXmlDirectory(title);
+            string saveLocation = CinemaPoster.Utilities.FileNameParser.CreateXmlDirectory(title);
             try
             {
                 XmlDocument xmlDocument = new XmlDocument();

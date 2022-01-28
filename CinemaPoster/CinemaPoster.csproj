@@ -91,12 +91,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\CinemaPosterServer.cs" />
     <Compile Include="Controllers\IMDBApi.cs" />
     <Compile Include="Controllers\NowPlaying.cs" />
     <Compile Include="Controllers\OmdbApi.cs" />
     <Compile Include="Controllers\PoserOld.cs" />
     <Compile Include="Interfaces\INowPlaying.cs" />
-    <Compile Include="Models\ActorShort.cs" />
     <Compile Include="Models\ComingSoonMovie.cs" />
     <Compile Include="Controllers\ImdbFetcher.cs" />
     <Compile Include="Controls\CustomTextBox.cs">
@@ -106,7 +106,6 @@
       <DependentUpon>CustomTextBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\PosterData.cs" />
-    <Compile Include="Models\TitleDataCustom.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -118,7 +117,6 @@
     <Compile Include="UI\CinemaForm.Designer.cs">
       <DependentUpon>CinemaForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\IMDBMovie.cs" />
     <Compile Include="Models\MovieTechnical.cs" />
     <Compile Include="Models\Serializer.cs" />
     <Compile Include="Controllers\PlexApi.cs" />

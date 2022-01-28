@@ -16,15 +16,17 @@ using CinemaPosterApp.Controllers;
 using CinemaPosterApp.Utilities;
 using CinemaPoster.Controllers;
 using CinemaPosterApp;
+using IMDbApiLib.Models;
+using MovieTypes;
 
 namespace CinemaPoster.Controllers
 {
     class PoserOld
     {
-        public delegate void SaveMovieCompleted(IMDBMovie movie, Int32 index);
+        public delegate void SaveMovieCompleted(TitleData movie, Int32 index);
 
 
-        private List<IMDBMovie> movies;
+        private List<TitleData> movies;
         private List<ComingSoonMovie> fetchedMovies;
         private CinemaForm mainForm;
         private ImdbFetcher fetcher;
@@ -36,7 +38,7 @@ namespace CinemaPoster.Controllers
 
         public PoserOld()
         {
-            movies = new List<IMDBMovie>();
+            movies = new List<TitleData>();
             fetchedMovies = new List<ComingSoonMovie>();
             fetcher = new ImdbFetcher();
           //  CreateDirectories();
@@ -62,12 +64,12 @@ namespace CinemaPoster.Controllers
             }
         }
 
-        public async Task<IMDBMovie> FetchPoster(string title, MovieTechnical tech)
+        public async Task<TitleData> FetchPoster(string title, MovieTechnical tech)
         {
             return await Task.Run(() => (fetcher.FetchMovieAsync(title, tech)));
         }
 
-        public void OnMovieSaved(IMDBMovie movie, Int32 count)
+        public void OnMovieSaved(TitleData movie, Int32 count)
         {
 
             movies.Add(movie);
@@ -84,14 +86,14 @@ namespace CinemaPoster.Controllers
             {
                 if (Regex.IsMatch(filename, @"\.xml$"))
                 {
-                    IMDBMovie m = (IMDBMovie)sr.DeSerializeObject<IMDBMovie>(String.Format(filename));
+                    TitleData m = (TitleData)sr.DeSerializeObject<TitleData>(String.Format(filename));
                     movies.Add(m);
                 }
             }
            // mainForm.SetInitialPoster(GetRandomPoster());
         }
 
-        public IMDBMovie GetRandomPoster()
+        public TitleData GetRandomPoster()
         {
             if (movies.Count == 0) { return null; }
             Random r = new Random();
@@ -122,7 +124,7 @@ namespace CinemaPoster.Controllers
                     }
                 }
             }
-            movies = new List<IMDBMovie>();
+            movies = new List<TitleData>();
         }
 
 

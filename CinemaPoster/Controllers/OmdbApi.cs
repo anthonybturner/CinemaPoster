@@ -1,6 +1,5 @@
 ﻿using IMDbApiLib;
-using CinemaPosterApp.MovieTypes;
-using CinemaPosterApp.Utilities;
+using MovieTypes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +14,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using CinemaPoster.Utilities;
 using IMDbApiLib.Models;
+using CinemaPosterApp.Utilities;
 
 namespace CinemaPoster.Controllers
 {
@@ -33,7 +33,7 @@ namespace CinemaPoster.Controllers
             form = formMain;
         }
 
-        public async Task GetMovieAsync(IMDBMovie movie, bool wantsPlot)
+        public async Task GetMovieAsync(TitleData movie, bool wantsPlot)
         {
             var url = "";
             if (wantsPlot)
@@ -48,17 +48,17 @@ namespace CinemaPoster.Controllers
         }
 
 
-        public void GetPoster(IMDBMovie movie)
+        public void GetPoster(TitleData movie)
         {
             var url = String.Format("http://img.omdbapi.com/?apikey={1}&i={0}&h=1920", movie.Id, OmdbApi.API_KEY);
             using (WebClient client = new WebClient())
             {
-                client.DownloadFileAsync(new Uri(url), movie.LocalImage);                
+              //  client.DownloadFileAsync(new Uri(url), movie.LocalImage);                
 
             }
         }
 
-        public async Task<IMDBMovie> GetJsonMovieAsync(String url, IMDBMovie movie)
+        public async Task<TitleData> GetJsonMovieAsync(String url, TitleData movie)
         {
             var client = new HttpClient();
             var request = new HttpRequestMessage
@@ -85,8 +85,8 @@ namespace CinemaPoster.Controllers
                         }
 
                              
-                        movie.Poster =  String.Format("http://img.omdbapi.com/?apikey={1}c&i={0}&h=1920", movie.Id, OmdbApi.API_KEY);
-                        movie.Image = movie.Poster;
+                        //movie.Poster =  String.Format("http://img.omdbapi.com/?apikey={1}c&i={0}&h=1920", movie.Id, OmdbApi.API_KEY);
+                     //   movie.Image = movie.Poster;
                         GetPoster(movie);
                         break;
                     }
@@ -99,9 +99,9 @@ namespace CinemaPoster.Controllers
             return movie;
         }
 
-        public  IMDBMovie GetXmlMovie(String url)
+        public TitleData GetXmlMovie(String url)
         {
-            IMDBMovie movie = new IMDBMovie();
+            TitleData movie = new TitleData();
 
             XmlTextReader reader = new XmlTextReader(url);
 
@@ -134,14 +134,11 @@ namespace CinemaPoster.Controllers
                             case "genre":
                                 movie.Genres = reader.Value;
                                 break;
-                            case "director":
-                                movie.Directors = reader.Value;
-                                break;
                             case "plot":
                                 movie.Plot = reader.Value;
                                 break;
                             case "poster":
-                                movie.Poster = reader.Value;
+                                //movie.Poster = reader.Value;
                                 movie.Image = reader.Value;
                                 break;
                             case "metaScore":

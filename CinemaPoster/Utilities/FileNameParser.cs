@@ -31,5 +31,22 @@ namespace CinemaPoster.Utilities
 
             return fileLocation;
         }
+
+        public static string CreateActorImageDirectory(string title)
+        {
+            var directory = CinemaForm.ActorsDirectory;
+            var ImageFileName = title.Replace(": ", "_").Replace("/", "_");
+            ImageFileName = ImageFileName.Replace(" ", "_") + ".jpg";
+            var fileLocation = directory + ImageFileName;
+            return fileLocation;
+        }
+        public static string CreateJsonDirectory(string title)
+        {
+            var directory = CinemaForm.JsonDirectory;
+            var ImageFileName = title.Replace(": ", "_").Replace("/", "_");
+            ImageFileName = ImageFileName.Replace(" ", "_") + ".json";
+            var fileLocation = directory + ImageFileName;
+            return fileLocation;
+        }
     }
 }

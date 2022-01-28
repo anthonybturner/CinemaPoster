@@ -1,43 +1,39 @@
-﻿using System;
+﻿using MovieTypes;
+using IMDbApiLib.Models;
+using System;
 using System.Collections.Generic;
-
-using System.Threading.Tasks;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Threading;
-
-using CinemaPosterApp.MovieTypes;
-
-using CinemaPosterApp.Controllers;
-using CinemaPosterApp.Utilities;
+using System.Threading.Tasks;
 using System.Timers;
+using CinemaPosterApp;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace CinemaPosterApp.PostersDB
+namespace PostersDB
 {
     public class Poster
     {
         private System.Timers.Timer PosterTimer { get; set; }
         public PosterChangeDelegate PosterChangeDel { get; set; }
-        public List<IMDBMovie> movies { get; set; }
+        public List<TitleData> movies { get; set; }
 
-        private List<ComingSoonMovie> fetchedMovies { get;  set; }
 
-        private ImdbFetcher fetcher { get; set; }
 
-        public delegate void PosterChangeDelegate(IMDBMovie n);
+        public delegate void PosterChangeDelegate(TitleData n);
 
-        public delegate void PostersCompleteDelegate(List<IMDBMovie> MoviesList);
+        public delegate void PostersCompleteDelegate(List<TitleData> MoviesList);
         public PostersCompleteDelegate PostersCompletedDel { get; internal set; }
+        public CinemaForm form { get; private set; }
+        public bool IsUsingRemoteOnly { get;  set; }
 
-        public Poster()
+        public Poster(CinemaForm form)
         {
-          
-            movies = new List<IMDBMovie>();
-            fetchedMovies = new List<ComingSoonMovie>();
-            fetcher = new ImdbFetcher();
+            this.form = form;
+            IsUsingRemoteOnly = true;
+            movies = new List<TitleData>();
             CreateDirectories();            
             InitPosterTimer();
-        
         }
 
         private void CreateDirectories()
@@ -61,19 +57,35 @@ namespace CinemaPosterApp.PostersDB
             {  // if it doesn't exist, create
                 Directory.CreateDirectory(CinemaForm.ActorsDirectory);
             }
+            if (!Directory.Exists(CinemaForm.JsonDirectory))
+            {  // if it doesn't exist, create
+                Directory.CreateDirectory(CinemaForm.JsonDirectory);
+            }
         }
 
         public async Task InitPostersAsync()
         {
-            string[] MovieXMLList;
-            MovieXMLList = Directory.GetFiles(CinemaForm.XMLDirectory, "*.xml", SearchOption.AllDirectories);
-            if (MovieXMLList == null || MovieXMLList.Length == 0)
-            {//Fetch movies from remote api
-              movies = await CinemaPoster.Controllers.IMDBApi.GetMoviesInfoAsync();
-            }
-            else
+            if (form.IsUsingRemote)//Only fetch remote files do not save
             {
-              PopulatePosters(MovieXMLList);
+                movies = await CinemaPoster.Controllers.CinemaPosterServer.GetPostersAsync(true);
+            }
+            else 
+            {//Fetch movies from remote api
+                string[] JsonMovieList;
+                JsonMovieList = Directory.GetFiles(CinemaForm.JsonDirectory, "*.json", SearchOption.AllDirectories);
+                if (JsonMovieList == null || JsonMovieList.Length == 0)
+                {
+                    movies = await CinemaPoster.Controllers.CinemaPosterServer.GetPostersAsync(false);
+                }
+                else
+                {
+                    PopulateLocalPosters(JsonMovieList);
+                }
+            }
+          
+            if (PostersCompletedDel != null)
+            {
+                PostersCompletedDel.Invoke(movies);
             }
         }
 
@@ -94,28 +106,29 @@ namespace CinemaPosterApp.PostersDB
             PosterTimer.Enabled = false;
             PosterTimer.Stop();
         }
-        private void PopulatePosters(String[] files)
+        private void PopulateLocalPosters(String[] files)
         {
             Serializer sr = new Serializer();
-            foreach (string filename in files)
+            foreach (string json in files)
             {
-                if (Regex.IsMatch(filename, @"\.xml$"))
+                if (Regex.IsMatch(json, @"\.json$"))
                 {
-                    IMDBMovie m = (IMDBMovie)sr.DeSerializeObject<IMDBMovie>(String.Format(filename));
-                    movies.Add(m);
+                    using (StreamReader file = File.OpenText(json))
+                    using (JsonTextReader reader = new JsonTextReader(file))
+                    {
+                        Newtonsoft.Json.Linq.JValue obj = (Newtonsoft.Json.Linq.JValue)Newtonsoft.Json.Linq.JToken.ReadFrom(reader);
+                        TitleData movie = JObject.Parse(obj.ToString()).ToObject<TitleData>();
+                        movies.Add(movie);
+                    }
                 }
             }
-            if(PostersCompletedDel != null)
-            {
-                PostersCompletedDel.Invoke(movies);
             }
-        }
 
         private void HandlePosterChangevent(object sender, ElapsedEventArgs e)
         {
             if (PosterChangeDel != null)
             {
-                IMDBMovie movie = GetRandomPoster();
+                TitleData movie = GetRandomPoster();
                 if (movie != null)
                 {
                     PosterChangeDel.Invoke(movie);
@@ -123,7 +136,7 @@ namespace CinemaPosterApp.PostersDB
             }
         }
 
-        public IMDBMovie GetRandomPoster()
+        public TitleData GetRandomPoster()
         {
             if (movies.Count == 0) { return null; }
             Random r = new Random();
