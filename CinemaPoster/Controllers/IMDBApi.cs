@@ -14,7 +14,7 @@ namespace CinemaPoster.Controllers
     class IMDBApi
     {
 
-        private static ApiLib api = new ApiLib("k_u215r302");
+        private static ApiLib api = new ApiLib("apikeyhere");
         private static OmdbApi omdbApi = new OmdbApi();
         private static Serializer serializer = new Serializer();
 
