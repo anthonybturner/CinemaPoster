@@ -23,7 +23,6 @@ namespace CinemaPosterApp.Controllers
 
         public ImdbFetcher()
         {
-            apiLib = new ApiLib("k_u215r302");
         }
 
         public async Task<TitleData> FetchMovieAsync(string mtitle, MovieTechnical mtech)
@@ -213,7 +212,7 @@ namespace CinemaPosterApp.Controllers
                 RequestUri = new Uri(String.Format("https://imdb8.p.rapidapi.com/title/get-technical?tconst={0}", movie.Id)),
                 Headers =
                 {
-                    { "x-rapidapi-key", "00e3b6603emsh590a064a3e8c494p175df9jsn6aaf9b2c458b" },
+                    { "x-rapidapi-key", "apikeyhere" },
                     { "x-rapidapi-host", "imdb8.p.rapidapi.com" },
                 },
             };
