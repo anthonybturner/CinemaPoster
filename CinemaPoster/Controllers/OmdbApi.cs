@@ -22,7 +22,7 @@ namespace CinemaPoster.Controllers
     {
 
         private Form form;
-        public static string API_KEY = "16dc3a0c";
+        public static string API_KEY = "apikeyhere";
 
         public OmdbApi()
         {
